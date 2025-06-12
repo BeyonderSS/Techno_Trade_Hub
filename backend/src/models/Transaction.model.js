@@ -33,5 +33,5 @@ const transactionSchema = new mongoose.Schema({
 }, {
   timestamps: { createdAt: true, updatedAt: false }
 });
-
+transactionSchema.index({ userId: 1, type: 1 });
 export const Transaction = mongoose.model('Transaction', transactionSchema);
