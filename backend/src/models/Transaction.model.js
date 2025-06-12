@@ -17,7 +17,7 @@ const transactionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   type: {
     type: String,
-    enum: ['deposit', 'withdrawal', 'roi_payout', 'direct_referral_bonus', 'weekly_bonus', 'monthly_salary', 'registration_bonus'],
+    enum: ['deposit', 'withdrawal', 'roi_payout', 'level_income' ,'direct_referral_bonus', 'weekly_bonus', 'monthly_salary', 'registration_bonus'],
     required: true,
     index: true
   },
