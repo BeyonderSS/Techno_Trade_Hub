@@ -27,10 +27,10 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // select: false
+    select: false
   },
   isEmailVerified: { type: Boolean, default: false },
-  otpCode: { type: String },
+  otpCode: { type: String,select:false },
   otpExpiresAt: { type: Date },
 //   otpAttemptCount: { type: Number, default: 0 },
 
