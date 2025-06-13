@@ -17,13 +17,13 @@ import {
 import { sidebarConfig } from "./sidebarConfig";
 import { useLocation, Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSession } from "../../../../context/SessionContext";
 
 export default function SidebarMenuContent() {
-  const loading = false
   const { toggleSidebar } = useSidebar();
   const { pathname } = useLocation();
   const [openCollapsibleIndex, setOpenCollapsibleIndex] = useState(null);
-
+  const { user, loading } = useSession();
   const handleMenuClick = () => {
     if (typeof window !== "undefined" && window.innerWidth < 768)
       toggleSidebar();
@@ -47,7 +47,8 @@ export default function SidebarMenuContent() {
   }
 
   /* ---------------- Menu after load ---------------- */
-  const role = "user";
+  const role = user?.roles;
+
   const roleConfig = [...sidebarConfig.shared, ...(sidebarConfig[role] || [])];
 
   return (
