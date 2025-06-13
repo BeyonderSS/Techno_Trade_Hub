@@ -13,8 +13,8 @@ import TradeHistoryPage from "../pages/Dashboard/Users/Income_Report/TradeHistor
 import Login from "../pages/Auth/Login";
 import VerifyOtp from "../pages/Auth/VerifyOtp";
 import Register from "../pages/Auth/Register";
-import WithdrawlPage from "../pages/Dashboard/Users/Withdrawl/WithdrawlPage";
 import AiTradeEngineHome from "../pages/Dashboard/Users/AIbot";
+import WithdrawalsPage from "../pages/Dashboard/Common/Withdrawl";
 
 const routes = [
   {
@@ -132,7 +132,7 @@ const routes = [
     path: "/dashbaord/withdraw",
     element: (
       <DashboardLayout>
-        <WithdrawlPage />
+        <WithdrawalsPage />
       </DashboardLayout>
     ),
   },

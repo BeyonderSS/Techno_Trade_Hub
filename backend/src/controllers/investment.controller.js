@@ -1,7 +1,7 @@
 import { Investment } from '../models/Investment.model.js'; // Adjust path as needed
 import { Transaction } from '../models/Transaction.model.js'; // Adjust path as needed
 import { User } from '../models/User.model.js'; // Adjust path as needed
-import { generateTxnId} from "../utils/generateTxnId.js"
+import { generateTxnId } from "../utils/generateTxnId.js"
 import mongoose from 'mongoose'; // Import mongoose for ObjectId validation and potentially sessions
 
 /**
@@ -30,7 +30,6 @@ export const getAllWithdrawals = async (req, res) => {
 
     const query = {
       type: 'withdrawal',
-      status: 'completed' // Assuming only completed withdrawals are shown in a general report
     };
 
     if (userId) {
@@ -176,7 +175,7 @@ export const createInvestment = async (req, res) => {
       transactionDate: new Date(),
       status: 'completed',
       relatedEntityId: newInvestment._id,
-      txnId :generateTxnId("deposit"),
+      txnId: generateTxnId("deposit"),
     });
     await depositTransaction.save();
 
