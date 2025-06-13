@@ -58,7 +58,6 @@ export const SessionProvider = ({ children }) => {
       }
 
       setSession(decoded); // Ensure session is up-to-date if token hasn't changed
-      console.log(decoded,"decode")
       const userProfile = await getUserProfile(decoded.userId);
 
       // Check if userProfile exists and if the account status is suspended

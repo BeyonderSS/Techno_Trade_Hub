@@ -13,7 +13,7 @@ router.use("/hello", helloRouter);
 router.use("/reports",reportRouter)
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
-router.use("/investment",investmentRouter)
+router.use("/investments",investmentRouter)
 // router.use("/users", userRouter);
 
 export default router;

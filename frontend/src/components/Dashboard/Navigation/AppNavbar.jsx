@@ -13,9 +13,11 @@ import { Button } from "@/components/ui/button";
 import { useBreadcrumbTitle } from "./breadcrumb-provider";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { toast } from "sonner";
+import { useSession } from "../../../context/SessionContext";
 
 function AppNavbar() {
   const breadcrumbTitle = useBreadcrumbTitle();
+  const { user, loading } = useSession();
 
   return (
     <TooltipProvider>
@@ -27,7 +29,7 @@ function AppNavbar() {
                 <SidebarTrigger />
               </div>
               <div className="flex items-center">
-              <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
+                <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
                   {breadcrumbTitle}
                 </h1>
               </div>
@@ -43,9 +45,8 @@ function AppNavbar() {
                     alt="User Avatar"
                     className=" h-12 w-12  rounded-full border border-white object-cover"
                   />
-                
                 </div>
-                <p className="font-semibold text-sm ml-3">Hi,{"user?.name"}</p>
+                <p className="font-semibold text-sm ml-3">Hi,{user?.name}</p>
               </div>
 
               <Tooltip delayDuration={300}>
