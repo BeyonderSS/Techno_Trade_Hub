@@ -11,7 +11,8 @@ export const generateTxnId = (type) => {
     direct_referral_bonus: "DRB",
     weekly_bonus: "WB",
     monthly_salary: "SAL",
-    registration_bonus: "RB"
+    registration_bonus: "RB",
+    level_income: "LI"
   };
 
   const prefix = prefixMap[type] || "GEN"; // fallback to GEN

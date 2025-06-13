@@ -5,6 +5,10 @@ import cors from "cors"; // Import cors
 import { beyonderLogger } from "./utils/logger.js";
 import apiRoutes from "./routes/index.js"; // Renamed for clarity
 import { connectDB } from "./config/database.js";
+import { startRoiDistributionJob } from './cron-jobs/roiDistribution.cron.js';
+import { startWeeklyBonusJob } from './cron-jobs/weeklyBonus.cron.js';
+import { startMonthlySalaryJob } from './cron-jobs/monthlySalary.cron.js';
+
 
 // Load environment variables
 dotenv.config();
@@ -43,13 +47,20 @@ app.use((err, req, res, next) => {
 // --- Connect DB and Start Server ---
 connectDB()
   .then(() => {
-    app.listen(PORT, async () => {
-      await beyonderLogger(); // Await the logger as it is now async
+    app.listen(PORT, () => {
+      beyonderLogger();
       console.log(`✅ Server listening on http://localhost:${PORT}`);
-      console.log(`   MONGODB_URI: ${process.env.MONGO_URI}`) // Log the db URI being used for confirmation
+      console.log(`✅ DB connect at ${process.env.MONGO_URI}`);
     });
+  })
+  .then(() => {
+    // --- Start Cron Jobs ---
+    startRoiDistributionJob();
+startWeeklyBonusJob();
+startMonthlySalaryJob();
+    console.log('All cron jobs initialized.');
   })
   .catch((err) => {
     console.error("❌ Failed to start server:", err);
-    process.exit(1); // Exit if database connection fails
+    process.exit(1);
   });
