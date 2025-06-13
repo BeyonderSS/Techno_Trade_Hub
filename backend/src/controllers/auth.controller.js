@@ -9,6 +9,9 @@ import { generateTxnId } from "../utils/generateTxnId.js";
 /**
  * Generate random alphanumeric referral code
  */
+ const generateReferralCode = () => {
+  return Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 chars
+};
 
 export const registerUser = async (req, res) => {
   try {
@@ -31,10 +34,7 @@ export const registerUser = async (req, res) => {
         return res.status(400).json({ message: "Invalid referral code." });
     }
 
-    const generateReferralCode = () => {
-  return Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 chars
-};
-
+   
 
     const newUser = new User({
       email,
@@ -171,7 +171,7 @@ export const loginUser = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
-        role: user.role,
+        roles: user.roles,
         name: user.name,
         walletBalance: user.walletBalance,
       },
