@@ -93,7 +93,7 @@ export default function SidebarMenuContent() {
                         className={`w-full rounded px-2 py-1.5 text-sm transition
                           ${
                             isActive(sub.href)
-                              ? "bg-white text-white font-semibold"
+                              ? " text-white font-semibold"
                               : "hover:bg-gradient-to-r hover:from-green-600 hover:to-blue-600 text-white transition-colors duration-200"
                           }`}
                       >

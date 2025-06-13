@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Copy } from "lucide-react";
 import { useState } from "react";
-
+import image from "../../../../assets/cardImg.png"
 // Dummy component for Button5 (replace with your actual Button5 if it's a styled component)
 const Button5 = ({ onClick, name }) => (
   <button
@@ -55,11 +55,10 @@ const SSDataTable = ({ data }) => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">
                 <span
-                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    row.status === "Active"
-                      ? "bg-green-700 text-green-100"
-                      : "bg-red-700 text-red-100"
-                  }`}
+                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${row.status === "Active"
+                    ? "bg-green-700 text-green-100"
+                    : "bg-red-700 text-red-100"
+                    }`}
                 >
                   {row.status}
                 </span>
@@ -142,44 +141,83 @@ const UserHome = () => {
 
   return (
     <div className="p-4 sm:p-6 bg-black/50 min-h-screen text-gray-100">
-      {/* Welcome Card */}
+      {/* Welcome Card */}   
       <div className="mb-6">
-        <div className="bg-black/50 rounded-lg shadow-md p-6 border border-white/90"> {/* Added border here */}
-          <div className="mb-4">
-            <h5 className="text-2xl font-bold text-white">
-              Welcome{" "}
-              <span className="capitalize text-blue-400">
-                {user?.username || "User"}
-              </span>
-              !
-            </h5>
-          </div>
-          <p className="text-gray-300 text-lg mb-4">
-            We're happy to have you on board.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex-grow">
-              <span className="text-lg font-semibold text-gray-200 block mb-1">
-                Ready to get started?
-              </span>
-              <p className="text-gray-300">Check out your dashboard to begin!</p>
-              <div className="mt-4">
-                <Button5
-                  onClick={() => console.log("Navigating to Buy Plan")}
-                  name={"Buy Plan"}
-                />
-              </div>
-            </div>
-            <div className="flex-shrink-0">
-              <img
-                src="https://img.icons8.com/plasticine/100/gift.png"
-                alt="gift icon"
-                className="w-24 h-24 object-contain"
-              />
-            </div>
-          </div>
+  <div className="bg-black/50 rounded-lg shadow-md p-6 border border-white/90 relative overflow-hidden">
+    <div className="mb-4">
+      <h5 className="text-2xl font-bold text-white">
+        Welcome{" "}
+        <span className="capitalize text-blue-400">
+          {user?.username || "User"}
+        </span>
+        !
+      </h5>
+    </div>
+    <p className="text-gray-300 text-lg mb-4">
+      We're happy to have you on board.
+    </p>
+    <div className="flex flex-col items-start justify-between gap-4">
+      <div className="flex-grow w-full pr-16 sm:pr-20 md:pr-24 lg:pr-32">
+        <span className="text-lg font-semibold text-gray-200 block mb-1">
+          Ready to get started?
+        </span>
+        <p className="text-gray-300">Check out your dashboard to begin!</p>
+        <div className="mt-4">
+          <Button5
+            onClick={() => console.log("Navigating to Buy Plan")}
+            name={"Buy Plan"}
+          />
         </div>
       </div>
+      
+      {/* Responsive Image Container */}
+      <div className="flex-shrink-0 hidden sm:block lg:w-auto">
+        <img
+          src={image}
+          alt="welcome image"
+          className="
+            w-32 h-32 sm:w-40 sm:h-40 md:w-68 md:h-48 lg:w-56 lg:h-56 xl:w-74 xl:h-74
+            object-contain
+            animate-bounce-slow
+            transition-all duration-200 ease-in-out
+            hover:scale-105
+            absolute right-6 top-7 lg:right-8 lg:-top-5
+          "
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style jsx>{`
+  @keyframes bounce-slow {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translateY(0px);
+    }
+    40% {
+      transform: translateY(-15px);
+    }
+    70% {
+      transform: translateY(-7px);
+    }
+  }
+  
+  .animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
+  }
+  
+  @media (max-width: 1023px) {
+    .animate-bounce-slow {
+      animation: bounce-slow 2.5s ease-in-out infinite;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .animate-bounce-slow {
+      animation: bounce-slow 2s ease-in-out infinite;
+    }
+  }
+`}</style>
 
       {/* Income Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
