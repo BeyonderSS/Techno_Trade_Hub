@@ -27,7 +27,7 @@ function AppNavbar() {
                 <SidebarTrigger />
               </div>
               <div className="flex items-center">
-                <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
+              <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
                   {breadcrumbTitle}
                 </h1>
               </div>
@@ -41,11 +41,9 @@ function AppNavbar() {
                       "https://img.icons8.com/3d-fluency/94/guest-male--v2.png"
                     }
                     alt="User Avatar"
-                    className="md:h-15 h-12 w-12 md:w-15 rounded-full border border-white object-cover"
+                    className=" h-12 w-12  rounded-full border border-white object-cover"
                   />
-                  <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full border border-black/60 shadow-md hover:bg-gray-100">
-                    <Camera className="h-2 w-2 text-gray-900 cursor-pointer" />
-                  </div>
+                
                 </div>
                 <p className="font-semibold text-sm ml-3">Hi,{"user?.name"}</p>
               </div>
