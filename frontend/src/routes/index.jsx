@@ -13,6 +13,8 @@ import TradeHistoryPage from "../pages/Dashboard/Users/Income_Report/TradeHistor
 import Login from "../pages/Auth/Login";
 import VerifyOtp from "../pages/Auth/VerifyOtp";
 import Register from "../pages/Auth/Register";
+import AiTradeEngineHome from "../pages/Dashboard/Users/AIbot";
+import WithdrawalsPage from "../pages/Dashboard/Common/Withdrawl";
 
 const routes = [
   {
@@ -69,7 +71,7 @@ const routes = [
   },
   {
     // Route for Referral Income Reports
-    path: "/user/income-reports/referral",
+    path: "/dashbaord/reports/referral",
     element: (
       <DashboardLayout>
         <ReferralIncomeReports />
@@ -78,7 +80,7 @@ const routes = [
   },
 
   {
-    path: "/user/income-reports/salary-income",
+    path: "/dashbaord/reports/salary-income",
     element: (
       <DashboardLayout>
         <SalaryIncomePage />
@@ -86,7 +88,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/income-reports/team-performance",
+    path: "/dashbaord/reports/team-performance",
     element: (
       <DashboardLayout>
         <TeamPerformance />
@@ -94,7 +96,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/income-reports/level-income",
+    path: "/dashbaord/reports/level-income",
     element: (
       <DashboardLayout>
         <LevelIncomePage />
@@ -102,7 +104,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/income-reports/weekly-bonus",
+    path: "/dashbaord/reports/weekly-bonus",
     element: (
       <DashboardLayout>
         <WeeklyBonusPage />
@@ -110,7 +112,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/network/trase-history",
+    path: "/dashbaord/reports/trade-history",
     element: (
       <DashboardLayout>
         <TradeHistoryPage />
@@ -119,10 +121,18 @@ const routes = [
   },
 
   {
-    path: "/user/aibot/aitradebot",
+    path: "/dashboard/ai-trade-engine",
     element: (
       <DashboardLayout>
-        <AiTradeBot />
+        <AiTradeEngineHome />
+      </DashboardLayout>
+    ),
+  },
+    {
+    path: "/dashbaord/withdraw",
+    element: (
+      <DashboardLayout>
+        <WithdrawalsPage />
       </DashboardLayout>
     ),
   },

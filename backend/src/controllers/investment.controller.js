@@ -1,7 +1,7 @@
 import { Investment } from '../models/Investment.model.js'; // Adjust path as needed
 import { Transaction } from '../models/Transaction.model.js'; // Adjust path as needed
 import { User } from '../models/User.model.js'; // Adjust path as needed
-import { generateTxnId} from "../utils/generateTxnId.js"
+import { generateTxnId } from "../utils/generateTxnId.js"
 import mongoose from 'mongoose'; // Import mongoose for ObjectId validation and potentially sessions
 
 /**
@@ -30,7 +30,6 @@ export const getAllWithdrawals = async (req, res) => {
 
     const query = {
       type: 'withdrawal',
-      status: 'completed' // Assuming only completed withdrawals are shown in a general report
     };
 
     if (userId) {
@@ -176,7 +175,7 @@ export const createInvestment = async (req, res) => {
       transactionDate: new Date(),
       status: 'completed',
       relatedEntityId: newInvestment._id,
-      txnId :generateTxnId("deposit"),
+      txnId: generateTxnId("deposit"),
     });
     await depositTransaction.save();
 
@@ -232,13 +231,13 @@ export const createInvestment = async (req, res) => {
 
 /**
  * Allows a user to raise a new withdrawal request.
- * The requested amount is immediately deducted from the user's wallet balance,
- * and a new transaction with 'pending' status is created.
+ * The requested amount, minus a 5% transaction fee, is deducted from the user's wallet.
+ * A new transaction with 'pending' status is created, recording the fee applied.
  *
  * @param {object} req - The Express request object.
  * @param {object} req.body - The request body containing withdrawal details.
  * @param {string} req.body.userId - The ID of the user requesting the withdrawal.
- * @param {number} req.body.amount - The amount to be withdrawn.
+ * @param {number} req.body.amount - The gross amount the user wishes to withdraw.
  * @param {string} req.body.cryptoWalletAddress - The crypto wallet address for the withdrawal.
  * @param {object} res - The Express response object.
  * @returns {Promise<void>} A promise that resolves when the withdrawal request is created.
@@ -251,47 +250,47 @@ export const raiseWithdrawalRequest = async (req, res) => {
 
   try {
     const { userId, amount, cryptoWalletAddress } = req.body;
+    const TRANSACTION_FEE_PERCENTAGE = 0.05; // 5% fee
 
     // Input Validation
     if (!userId || !amount || amount <= 0 || !cryptoWalletAddress) {
-      // await session.abortTransaction(); session.endSession();
       return res.status(400).json({ success: false, message: 'Missing required withdrawal fields (userId, amount, cryptoWalletAddress).' });
     }
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      // await session.abortTransaction(); session.endSession();
       return res.status(400).json({ success: false, message: 'Invalid User ID format.' });
     }
 
     const user = await User.findById(userId); // .session(session);
     if (!user) {
-      // await session.abortTransaction(); session.endSession();
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
 
+    // Calculate fee and total amount to deduct
+    const adminFeeApplied = amount * TRANSACTION_FEE_PERCENTAGE;
+    const totalAmountToDeduct = amount + adminFeeApplied; // User pays the fee on top of withdrawal amount
+
     // Check for sufficient balance
-    if (user.walletBalance < amount) {
-      // await session.abortTransaction(); session.endSession();
-      return res.status(400).json({ success: false, message: 'Insufficient wallet balance for withdrawal.' });
+    if (user.walletBalance < totalAmountToDeduct) {
+      return res.status(400).json({ success: false, message: `Insufficient wallet balance. You need $${totalAmountToDeduct.toFixed(2)} (including $${adminFeeApplied.toFixed(2)} fee) to withdraw $${amount.toFixed(2)}.` });
     }
 
-    // Deduct amount from user's wallet
-    user.walletBalance -= amount;
+    // Deduct total amount from user's wallet
+    user.walletBalance -= totalAmountToDeduct;
     await user.save(); // .session(session);
 
     // Create a new pending withdrawal transaction
     const withdrawalTransaction = new Transaction({
       userId: user._id,
       type: 'withdrawal',
-      amount: amount,
+      amount: amount, // The amount the user requested to withdraw
       transactionDate: new Date(),
       status: 'pending', // Initial status is pending
       cryptoWalletAddress: cryptoWalletAddress,
-      txnId: generateTxnId("withdrawal"),
+      txnId: generateTxnId("WDR"),
+      adminFeeApplied: adminFeeApplied.toFixed(2), // Store the calculated fee
+      adminActionNotes: `Withdrawal request for $${amount.toFixed(2)}. Fee applied: $${adminFeeApplied.toFixed(2)}.`
     });
     await withdrawalTransaction.save(); // .session(session);
-
-    // await session.commitTransaction();
-    // session.endSession();
 
     res.status(201).json({
       success: true,
@@ -301,9 +300,6 @@ export const raiseWithdrawalRequest = async (req, res) => {
     });
 
   } catch (error) {
-    // If an error occurs after deducting but before saving transaction, or vice-versa,
-    // a transaction session would revert changes. Without it, manual rollback might be needed.
-    // await session.abortTransaction(); session.endSession();
     console.error('Error raising withdrawal request:', error);
     res.status(500).json({ success: false, message: 'Server error while raising withdrawal request.', error: error.message });
   }

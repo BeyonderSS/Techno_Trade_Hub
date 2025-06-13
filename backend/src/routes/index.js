@@ -14,6 +14,7 @@ router.use("/hello", helloRouter);
 router.use("/reports",reportRouter)
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
+router.use("/investments",investmentRouter)
 router.use("/investment",investmentRouter)
 router.use('/admin', adminRoutes);
 

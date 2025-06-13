@@ -1,0 +1,44 @@
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "65b21c4e7f3a8b001a1c3b5d",
+      "amount": 100.00,
+      "transactionDate": "2024-06-10T14:30:00.000Z",
+      "status": "completed",
+      "type": "withdrawal",
+      "txnId": "WDR-001-XYZ",
+      "cryptoWalletAddress": "0x123abc...",
+      "adminFeeApplied": 5.00,
+      "adminActionNotes": "Processed successfully."
+    },
+    {
+      "_id": "65c32d5f8a4b9c002a2d4c6e",
+      "amount": 50.00,
+      "transactionDate": "2024-06-08T10:00:00.000Z",
+      "status": "pending",
+      "type": "withdrawal",
+      "txnId": "WDR-002-ABC",
+      "cryptoWalletAddress": "0x456def...",
+      "adminFeeApplied": 0,
+      "adminActionNotes": null
+    },
+    {
+      "_id": "65d43e6f9b5c0d003b3e5d7f",
+      "amount": 75.00,
+      "transactionDate": "2024-06-05T09:15:00.000Z",
+      "status": "failed",
+      "type": "withdrawal",
+      "txnId": "WDR-003-GHI",
+      "cryptoWalletAddress": "0x789ghi...",
+      "adminFeeApplied": 0,
+      "adminActionNotes": "Insufficient funds in platform wallet at time of processing. Amount credited back."
+    }
+  ],
+  "pagination": {
+    "total": 3,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 1
+  }
+}
