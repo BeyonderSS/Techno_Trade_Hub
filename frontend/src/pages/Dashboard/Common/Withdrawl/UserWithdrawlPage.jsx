@@ -15,7 +15,7 @@ import { WithdrawalDialog } from "../../../../components/Withdrawl/WithdrawalDia
 import { getWithdrawalHistoryApi } from "../../../../api/investment.api";
 import { useSession } from "../../../../context/SessionContext";
 
-export default function WithdrawalsPage() {
+export default function UserWithdrawalsPage() {
   const { user, loading: sessionLoading } = useSession(); // Get user object and session loading state
   const [withdrawals, setWithdrawals] = useState([]);
   const [filteredWithdrawals, setFilteredWithdrawals] = useState([]);
