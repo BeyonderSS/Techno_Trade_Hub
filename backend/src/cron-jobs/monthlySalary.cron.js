@@ -17,8 +17,8 @@ async function getAllDownlineUsersOptimized(userId) {
     while (queue.length > 0) {
         const currentUserId = queue.shift();
 
-        // Find users who have currentUserId as their referredBy
-        const directReferrals = await User.find({ referredBy: currentUserId }).select('_id');
+        // Find users who have currentUserId as their referredBy AND have role 'user'
+        const directReferrals = await User.find({ referredBy: currentUserId, role: 'user' }).select('_id'); // ADDED ROLE FILTER
 
         for (const referral of directReferrals) {
             const referralIdStr = referral._id.toString();
@@ -51,7 +51,8 @@ export const startMonthlySalaryJob = () => {
   cron.schedule('0 0 28 * *', async () => { // Every month on the 28th at 12 AM
     console.log('Running Optimized Monthly Salary distribution job...');
     try {
-      const users = await User.find({}).select('_id walletBalance');
+      // Fetch only users with role 'user'
+      const users = await User.find({ roles: 'user' }).select('_id walletBalance'); // ADDED ROLE FILTER
 
       const userWalletUpdates = [];
       const transactionCreations = [];
@@ -59,6 +60,7 @@ export const startMonthlySalaryJob = () => {
       for (const user of users) {
         const { _id: userId } = user;
 
+        // Ensure only 'user' roles are counted in the team size
         const allDownline = await getAllDownlineUsersOptimized(userId);
         const teamSize = allDownline.size;
 

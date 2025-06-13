@@ -2,6 +2,7 @@ import express from "express";
 import helloRouter from "./hello.route.js";
 import authRouter from "./auth.routes.js";
 import userRouter from "./user.routes.js";
+import adminRoutes from './adminRoutes.js';
 // Import other route modules here as they are created
 // import userRouter from "./user.route.js";
 import reportRouter from "./report.routes.js"
@@ -14,6 +15,8 @@ router.use("/reports",reportRouter)
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
 router.use("/investment",investmentRouter)
+app.use('/admin', adminRoutes);
+
 // router.use("/users", userRouter);
 
 export default router;
