@@ -1,6 +1,7 @@
 import { Investment } from '../models/Investment.model.js'; // Adjust path as needed
 import { Transaction } from '../models/Transaction.model.js'; // Adjust path as needed
 import { User } from '../models/User.model.js'; // Adjust path as needed
+import { generateTxnId} from "../utils/generateTxnId.js"
 import mongoose from 'mongoose'; // Import mongoose for ObjectId validation and potentially sessions
 
 /**
@@ -175,7 +176,7 @@ export const createInvestment = async (req, res) => {
       transactionDate: new Date(),
       status: 'completed',
       relatedEntityId: newInvestment._id,
-      txnId: `DEP-${Date.now()}-${investingUser._id.toString().substring(0, 6)}`
+      txnId :generateTxnId("deposit"),
     });
     await depositTransaction.save();
 
@@ -198,7 +199,7 @@ export const createInvestment = async (req, res) => {
           transactionDate: new Date(),
           status: 'completed',
           relatedEntityId: newInvestment._id,
-          txnId: `DRB-${Date.now()}-${referrerUser._id.toString().substring(0, 6)}`,
+          txnId: generateTxnId("direct_referral_bonus"),
           adminActionNotes: `Direct referral bonus for new investment by ${investingUser.name || investingUser.email}`
         });
         await referralBonusTransaction.save();
@@ -285,7 +286,7 @@ export const raiseWithdrawalRequest = async (req, res) => {
       transactionDate: new Date(),
       status: 'pending', // Initial status is pending
       cryptoWalletAddress: cryptoWalletAddress,
-      txnId: `WDR-${Date.now()}-${user._id.toString().substring(0, 6)}`
+      txnId: generateTxnId("withdrawal"),
     });
     await withdrawalTransaction.save(); // .session(session);
 

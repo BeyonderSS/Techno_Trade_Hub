@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     select: false
   },
   isEmailVerified: { type: Boolean, default: false },
-  otpCode: { type: String, select: false },
+  otpCode: { type: String,select:false },
   otpExpiresAt: { type: Date },
 //   otpAttemptCount: { type: Number, default: 0 },
 
@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, index: 'text' },
   contactNumber: { type: String },
   walletBalance: { type: Number, default: 0 },
-
+ referralCode: { type: String, unique:true}, // Unique referral code for the user
   referredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   directReferrals:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
   monthlyTradesCompleted: { type: Number, default: 0 },

@@ -9,9 +9,6 @@ import { generateTxnId } from "../utils/generateTxnId.js";
 /**
  * Generate random alphanumeric referral code
  */
- const generateReferralCode = () => {
-  return Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 chars
-};
 
 export const registerUser = async (req, res) => {
   try {
@@ -41,7 +38,7 @@ export const registerUser = async (req, res) => {
 
     const newUser = new User({
       email,
-      passwordHash: hashedPassword,
+      password: hashedPassword,
       isEmailVerified: false,
       otpCode,
       otpExpiresAt,
@@ -78,11 +75,10 @@ export const registerUser = async (req, res) => {
 
     await sendOtpToEmail(email, otpCode);
 
-    const token = generateToken(savedUser._id);
 
     return res.status(201).json({
       message: "User registered successfully. OTP sent to email.",
-      token,
+
       user: {
         id: savedUser._id,
         email: savedUser.email,
@@ -104,7 +100,7 @@ export const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+otpCode");
     if (!user) return res.status(404).json({ message: "User not found." });
 
     if (user.isEmailVerified) return res.status(400).json({ message: "Email already verified." });
@@ -119,8 +115,9 @@ export const verifyOtp = async (req, res) => {
     user.otpCode = undefined;
     user.otpExpiresAt = undefined;
     await user.save();
+    const token = generateToken(user._id);
 
-    return res.status(200).json({ message: "Email verified successfully." });
+    return res.status(200).json({ token, message: "Email verified successfully." });
   } catch (err) {
     console.error("OTP Verify Error:", err);
     return res.status(500).json({ message: "Server error." });
@@ -160,7 +157,6 @@ export const resendOtp = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     // 1. Input Validation (Basic) - Client-side validation is better but server-side is crucial for security
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required." });
@@ -168,8 +164,7 @@ export const loginUser = async (req, res) => {
 
     // 2. Find User by Email
     // .select("+password") is essential to retrieve the hashed password for comparison
-    const user = await User.findOne({ email });
-
+    const user = await User.findOne({ email }).select('+password')
     // If user is not found, return 404. Avoid giving specific "email not found"
     // to prevent enumeration attacks; "Invalid credentials" is more generic.
     // However, your current message "User not found." is fine if you're okay with that detail.
@@ -177,9 +172,9 @@ export const loginUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-console.log(user)
+
     // 3. Password Comparison
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    const isMatch = await bcrypt.compare(password, user.password);
     // If passwords don't match, return 401 Unauthorized.
     // Again, avoid specific "invalid password" to prevent enumeration.
     if (!isMatch) {

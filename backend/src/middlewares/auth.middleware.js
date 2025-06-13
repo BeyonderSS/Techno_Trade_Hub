@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.model.js"; // Import User model
-
+import { jwtDecode } from "jwt-decode";
 /**
  * @desc Middleware to protect routes (ensure user is logged in)
  */
@@ -11,12 +11,10 @@ export const protect = async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
     try {
       token = req.headers.authorization.split(' ')[1];
-
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+      const decoded = jwtDecode(token);
       // Attach user to the request object (excluding password)
-      req.user = await User.findById(decoded.id).select("-password");
+      req.user = await User.findById(decoded.userId).select("-password");
 
       if (!req.user) {
         return res.status(401).json({ message: "Not authorized, user not found" });

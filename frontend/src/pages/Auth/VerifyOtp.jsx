@@ -21,8 +21,10 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 // Import your actual API functions
-import { verifyOtp as verifyOtpApi, resendOtp as resendOtpApi } from "../../api/auth";
-
+import {
+  verifyOtp as verifyOtpApi,
+  resendOtp as resendOtpApi,
+} from "../../api/auth";
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState("");
@@ -109,7 +111,10 @@ export default function VerifyOtp() {
           },
           error: (err) => {
             // Access the error message from the backend response
-            const errorMessage = err.response?.data?.message || err.message || "Failed to resend OTP.";
+            const errorMessage =
+              err.response?.data?.message ||
+              err.message ||
+              "Failed to resend OTP.";
             throw new Error(errorMessage); // Throw to be caught by toast.promise error handler
           },
         }
@@ -121,7 +126,6 @@ export default function VerifyOtp() {
       setResendLoading(false);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setOtpError("");
@@ -144,18 +148,28 @@ export default function VerifyOtp() {
         verifyOtpApi({ email, otp }), // Pass email and otp as a payload object
         {
           loading: "Verifying OTP...",
-          success: (data) => data.message || "Email verified successfully!",
+          success: (data) => {
+            // Check if a token is received and store it
+            if (data.token) {
+              // <--- ADDED THIS CHECK
+              localStorage.setItem("authToken", data.token); // <--- ADDED THIS LINE
+            }
+            return data.message || "Email verified successfully!";
+          },
           error: (err) => {
             // Access the error message from the backend response
-            const errorMessage = err.response?.data?.message || err.message || "Invalid OTP or server error.";
+            const errorMessage =
+              err.response?.data?.message ||
+              err.message ||
+              "Invalid OTP or server error.";
             throw new Error(errorMessage); // Throw to be caught by toast.promise error handler
           },
         }
       );
 
       // If successful, navigate to dashboard
+      // This will only be reached if the toast.promise 'success' handler completes without throwing
       navigate("/dashboard");
-
     } catch (error) {
       console.error("OTP Verify Error:", error);
       // toast.promise already handles showing the error, so no extra toast here.
