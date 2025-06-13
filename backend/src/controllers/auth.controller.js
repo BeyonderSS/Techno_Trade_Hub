@@ -9,7 +9,7 @@ import { generateTxnId } from "../utils/generateTxnId.js";
 /**
  * Generate random alphanumeric referral code
  */
- const generateReferralCode = () => {
+const generateReferralCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 chars
 };
 
@@ -78,10 +78,10 @@ export const registerUser = async (req, res) => {
 
     await sendOtpToEmail(email, otpCode);
 
- 
+
     return res.status(201).json({
       message: "User registered successfully. OTP sent to email.",
-      
+
       user: {
         id: savedUser._id,
         email: savedUser.email,
@@ -118,9 +118,9 @@ export const verifyOtp = async (req, res) => {
     user.otpCode = undefined;
     user.otpExpiresAt = undefined;
     await user.save();
-   const token = generateToken(user._id);
+    const token = generateToken(user._id);
 
-    return res.status(200).json({ token,message: "Email verified successfully." });
+    return res.status(200).json({ token, message: "Email verified successfully." });
   } catch (err) {
     console.error("OTP Verify Error:", err);
     return res.status(500).json({ message: "Server error." });
@@ -160,7 +160,6 @@ export const resendOtp = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
- console.log(email,password)
     // 1. Input Validation (Basic) - Client-side validation is better but server-side is crucial for security
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required." });
@@ -169,7 +168,6 @@ export const loginUser = async (req, res) => {
     // 2. Find User by Email
     // .select("+password") is essential to retrieve the hashed password for comparison
     const user = await User.findOne({ email }).select('+password')
-console.log(user)
     // If user is not found, return 404. Avoid giving specific "email not found"
     // to prevent enumeration attacks; "Invalid credentials" is more generic.
     // However, your current message "User not found." is fine if you're okay with that detail.

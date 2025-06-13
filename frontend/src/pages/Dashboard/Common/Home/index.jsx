@@ -1,17 +1,21 @@
-import React from 'react'
-import AdminHome from './AdminHome'
-import UserHome from './UserHome'
+import React from "react";
+import AdminHome from "./AdminHome";
+import UserHome from "./UserHome";
+import { useSession } from "../../../../context/SessionContext";
+import { LucideClockFading } from "lucide-react";
 
 function DashboardHome() {
-    const role = "user"
-    if (role === "admin") {
-        return <AdminHome />
-    } else {
-        return <UserHome />
-    }
-    return (
-        <div>index</div>
-    )
+  const { user, loading } = useSession();
+  if (loading) {
+    return <div>loading... </div>;
+  }
+  console.log(user);
+  const role = user?.roles;
+  if (role === "admin") {
+    return <AdminHome />;
+  } else {
+    return <UserHome />;
+  }
 }
 
-export default DashboardHome
+export default DashboardHome;

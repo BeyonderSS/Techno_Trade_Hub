@@ -73,7 +73,7 @@ export default function Login() {
         }
       );
       // If the toast.promise 'success' handler completes without throwing, navigate
-      // navigate("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login Error:", error);
       // The toast.promise `error` handler already displayed the message,
