@@ -9,9 +9,6 @@ import { generateTxnId } from "../utils/generateTxnId.js";
 /**
  * Generate random alphanumeric referral code
  */
- const generateReferralCode = () => {
-  return Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 chars
-};
 
 export const registerUser = async (req, res) => {
   try {
