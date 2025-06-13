@@ -8,6 +8,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import SidebarMenuContent from "./SidebarMenuContent";
 import { toast } from "sonner"; // Import toast from sonner
+import { LogOut } from "lucide-react";
 
 // Sidebar Header Component
 function SidebarHeaderContent() {
@@ -52,15 +53,17 @@ export function AppSidebar() {
         <SidebarMenuContent />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenuButton
-          asChild
-          className="w-full rounded-md px-2 py-2 flex justify-center items-center text-xl font-semibold text-white  hover:bg-red-500 transition cursor-pointer"
-        >
-          <button onClick={handleLogout} className="w-full mb-10 ">
+        <SidebarMenuButton asChild>
+          <button
+            onClick={handleLogout}
+            className="w-full mb-6 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-base sm:text-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            <LogOut className="w-5 h-5 text-white" />
             Logout
           </button>
         </SidebarMenuButton>
       </SidebarFooter>
+
     </Sidebar>
   );
 }

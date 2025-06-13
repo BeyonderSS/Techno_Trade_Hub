@@ -13,8 +13,6 @@ import TradeHistoryPage from "../pages/Dashboard/Users/Income_Report/TradeHistor
 import Login from "../pages/Auth/Login";
 import VerifyOtp from "../pages/Auth/VerifyOtp";
 import Register from "../pages/Auth/Register";
-import WithdrawlPage from "../pages/Dashboard/Users/Withdrawl/WithdrawlPage";
-import AiTradeEngineHome from "../pages/Dashboard/Users/AIbot";
 
 const routes = [
   {
@@ -71,7 +69,7 @@ const routes = [
   },
   {
     // Route for Referral Income Reports
-    path: "/dashbaord/reports/referral",
+    path: "/user/income-reports/referral",
     element: (
       <DashboardLayout>
         <ReferralIncomeReports />
@@ -80,7 +78,7 @@ const routes = [
   },
 
   {
-    path: "/dashbaord/reports/salary-income",
+    path: "/user/income-reports/salary-income",
     element: (
       <DashboardLayout>
         <SalaryIncomePage />
@@ -88,7 +86,7 @@ const routes = [
     ),
   },
   {
-    path: "/dashbaord/reports/team-performance",
+    path: "/user/income-reports/team-performance",
     element: (
       <DashboardLayout>
         <TeamPerformance />
@@ -96,7 +94,7 @@ const routes = [
     ),
   },
   {
-    path: "/dashbaord/reports/level-income",
+    path: "/user/income-reports/level-income",
     element: (
       <DashboardLayout>
         <LevelIncomePage />
@@ -104,7 +102,7 @@ const routes = [
     ),
   },
   {
-    path: "/dashbaord/reports/weekly-bonus",
+    path: "/user/income-reports/weekly-bonus",
     element: (
       <DashboardLayout>
         <WeeklyBonusPage />
@@ -112,7 +110,7 @@ const routes = [
     ),
   },
   {
-    path: "/dashbaord/reports/trade-history",
+    path: "/user/network/trase-history",
     element: (
       <DashboardLayout>
         <TradeHistoryPage />
@@ -121,18 +119,10 @@ const routes = [
   },
 
   {
-    path: "/dashboard/ai-trade-engine",
+    path: "/user/aibot/aitradebot",
     element: (
       <DashboardLayout>
-        <AiTradeEngineHome />
-      </DashboardLayout>
-    ),
-  },
-    {
-    path: "/dashbaord/withdraw",
-    element: (
-      <DashboardLayout>
-        <WithdrawlPage />
+        <AiTradeBot />
       </DashboardLayout>
     ),
   },
