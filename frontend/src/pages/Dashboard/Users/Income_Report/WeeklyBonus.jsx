@@ -1,47 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import ReportHeader from "@/components/report-header";
 import { Badge } from "../../../../components/ui/batch";
-import { DollarSign, Calendar } from "lucide-react";
-
-// Mock data
-const mockData = [
-  {
-    _id: "65h87c0d3f9a4b007f7i9j1d",
-    userId: {
-      _id: "65a0c9e2b3f4d5a6b7c8e9f0",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-    },
-    amount: 100.0,
-    transactionDate: "2024-05-27T00:00:00.000Z",
-    status: "completed",
-    type: "weekly_bonus",
-    txnId: "WB-001-VWX",
-    adminActionNotes: "Weekly bonus for referrals in week 21.",
-  },
-  {
-    _id: "65i98d1e4g0b5c008g8j0k2e",
-    userId: {
-      _id: "65a0c9e2b3f4d5a6b7c8e9f0",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-    },
-    amount: 75.0,
-    transactionDate: "2024-05-20T00:00:00.000Z",
-    status: "completed",
-    type: "weekly_bonus",
-    txnId: "WB-002-YZA",
-    adminActionNotes: "Weekly bonus for referrals in week 20.",
-  },
-];
+import { DollarSign, Calendar, Download } from "lucide-react"; // Import Download icon
+import { getWeeklyBonusReportApi } from "../../../../api/reports.api";
+import { useSession } from "../../../../context/SessionContext"; // Import useSession
 
 export default function WeeklyBonusPage() {
-  const [data] = useState(mockData);
+  const { user, loading: sessionLoading } = useSession(); // Get user and session loading status
+  const [data, setData] = useState([]); // State to store fetched weekly bonus data
+  const [loading, setLoading] = useState(true); // State for data fetching loading indicator
+  const [error, setError] = useState(null); // State for storing fetch errors
 
-  const columns = [
+  // States for date filtering
+  const [startDateFilter, setStartDateFilter] = useState("");
+  const [endDateFilter, setEndDateFilter] = useState("");
+
+  // Function to fetch weekly bonus data based on current filters and user session
+  const fetchData = async () => {
+    // Only proceed if user session is loaded and user ID is available
+    if (!sessionLoading && user?.id) {
+      setLoading(true); // Start loading
+      setError(null); // Clear previous errors
+
+      try {
+        const filters = {
+          page: 1, // Reset to first page on filter change
+          limit: 100, // Fetch up to 100 records for demonstration, adjust as needed
+        };
+
+        if (startDateFilter) {
+          filters.startDate = startDateFilter;
+        }
+        if (endDateFilter) {
+          // Adjust endDate to include the entire selected day
+          const end = new Date(endDateFilter);
+          end.setDate(end.getDate() + 1); // Add one day to include the full end date
+          filters.endDate = end.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+        }
+
+        const response = await getWeeklyBonusReportApi(user.id, filters);
+        setData(response.data); // Update data state with fetched data
+      } catch (err) {
+        console.error("Error fetching weekly bonus report:", err);
+        setError(err.message || "Failed to load weekly bonus report.");
+      } finally {
+        setLoading(false); // End loading
+      }
+    } else if (!sessionLoading && !user?.id) {
+      // Handle case where session is loaded but user is not authenticated
+      setLoading(false);
+      setError("User not authenticated. Please log in to view weekly bonus report.");
+    }
+  };
+
+  // useEffect hook to trigger data fetching when filters or session status change
+  useEffect(() => {
+    fetchData();
+  }, [user, sessionLoading, startDateFilter, endDateFilter]); // Dependencies for re-fetching
+
+  // Column definitions for the DataTable, memoized for performance
+  const columns = useMemo(() => [
     {
       accessorKey: "txnId",
       header: "Transaction ID",
@@ -51,8 +72,8 @@ export default function WeeklyBonusPage() {
       header: "User",
       cell: ({ row }) => (
         <div>
-          <div className="font-medium">{row.original.userId.name}</div>
-          <div className="text-sm text-muted-foreground">{row.original.userId.email}</div>
+          <div className="font-medium">{row.original.userId?.name || 'N/A'}</div>
+          <div className="text-sm text-muted-foreground">{row.original.userId?.email || 'N/A'}</div>
         </div>
       ),
     },
@@ -60,7 +81,7 @@ export default function WeeklyBonusPage() {
       accessorKey: "amount",
       header: "Amount",
       cell: ({ row }) => (
-        <div className="font-medium text-right">${row.original.amount.toFixed(2)}</div>
+        <div className="font-medium text-right">${row.original.amount?.toFixed(2) || "0.00"}</div>
       ),
     },
     {
@@ -87,35 +108,132 @@ export default function WeeklyBonusPage() {
           className="max-w-[250px] truncate text-sm sm:text-base"
           title={row.original.adminActionNotes}
         >
-          {row.original.adminActionNotes}
+          {row.original.adminActionNotes || 'N/A'}
         </div>
       ),
     },
-  ];
+  ], []);
 
+  // Dynamically calculate statistics based on fetched data, memoized for performance
+  const totalWeeklyBonuses = useMemo(() => {
+    return data.reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
+  }, [data]);
+
+  const latestBonusDate = useMemo(() => {
+    if (data.length === 0) return "N/A";
+    const sortedData = [...data].sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
+    return new Date(sortedData[0].transactionDate).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }, [data]);
+
+  // Statistics array passed to ReportHeader
   const stats = [
     {
       label: "Total Weekly Bonuses",
-      value: "$175.00",
-      change: "+33% from previous week",
+      value: `$${totalWeeklyBonuses.toFixed(2)}`,
       icon: <DollarSign className="h-5 w-5" />,
     },
     {
-      label: "Latest Bonus Week",
-      value: "Week 21",
+      label: "Latest Bonus Date", // Changed from "Latest Bonus Week" to reflect date
+      value: latestBonusDate,
       icon: <Calendar className="h-5 w-5" />,
     },
   ];
 
+  // Function to handle exporting data to CSV
+  const handleExportCsv = () => {
+    if (data.length === 0) {
+      alert("No data to export."); // Using alert for simplicity, consider a custom modal
+      return;
+    }
+
+    const csvHeader = [
+      "Transaction ID", "User Name", "User Email", "Amount", "Date", "Status", "Notes"
+    ];
+
+    const csvRows = data.map(row => {
+      const userName = row.userId?.name || 'N/A';
+      const userEmail = row.userId?.email || 'N/A';
+      const amount = row.amount?.toFixed(2) || "0.00";
+      const transactionDate = new Date(row.transactionDate).toLocaleDateString();
+      const status = row.status;
+      const notes = row.adminActionNotes || 'N/A';
+
+      // Helper function to escape fields for CSV format
+      const escapeCsvField = (field) => {
+        if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
+          return `"${field.replace(/"/g, '""')}"`;
+        }
+        return field;
+      };
+
+      return [
+        escapeCsvField(row.txnId),
+        escapeCsvField(userName),
+        escapeCsvField(userEmail),
+        escapeCsvField(amount),
+        escapeCsvField(transactionDate),
+        escapeCsvField(status),
+        escapeCsvField(notes)
+      ];
+    });
+
+    const csvContent = [
+      csvHeader.join(','),
+      ...csvRows.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'weekly_bonus_report.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // Render loading state
+  if (loading || sessionLoading) {
+    return (
+      <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-10 max-w-7xl mx-auto flex justify-center items-center h-[calc(100vh-100px)]">
+        <div className="text-white text-lg">Loading weekly bonus report...</div>
+      </div>
+    );
+  }
+
+  // Render error state
+  if (error) {
+    return (
+      <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-10 max-w-7xl mx-auto flex justify-center items-center h-[calc(100vh-100px)]">
+        <div className="text-red-500 text-lg">Error: {error}</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+    <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-8 max-w-7xl mx-auto">
       <ReportHeader
         title="Weekly Bonus"
         description="View your weekly bonus earnings based on referral activity"
         stats={stats}
       />
-      <div className="bg-black/50  border  border-amber-50 rounded-xl shadow-sm p-4 sm:p-6">
-        <DataTable columns={columns} data={data} searchColumn="txnId" />
+
+
+      <div className="bg-black/50 border border-amber-50 rounded-xl shadow-sm p-4 sm:p-6">
+        {data.length === 0 ? (
+          <div className="text-gray-400 text-center py-8">
+            No weekly bonus transactions found for the selected period.
+          </div>
+        ) : (
+          <DataTable columns={columns} data={data} searchColumn="txnId" />
+        )}
       </div>
     </div>
   );
