@@ -58,7 +58,8 @@ export const SessionProvider = ({ children }) => {
       }
 
       setSession(decoded); // Ensure session is up-to-date if token hasn't changed
-      const userProfile = await getUserProfile(decoded.id);
+      console.log(decoded,"decode")
+      const userProfile = await getUserProfile(decoded.userId);
 
       // Check if userProfile exists and if the account status is suspended
       if (userProfile && userProfile.accountStatus === "suspended") {
@@ -71,7 +72,7 @@ export const SessionProvider = ({ children }) => {
         return; // Stop further processing
       }
 
-      setUser(userProfile);
+      setUser(userProfile.user);
     } catch (err) {
       console.error("Error refreshing session:", err);
       const isOnDashboardRoute =

@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 export const getUserHome = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
-
+console.log(userId)
     // 1. Concurrently fetch primary user data and first investment
     const [user, firstInvestment] = await Promise.all([
       User.findById(userId)

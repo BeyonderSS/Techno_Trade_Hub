@@ -7,7 +7,7 @@ import { SessionProvider } from "./context/SessionContext";
 function App() {
   return (
     <Router>
-      {/* <SessionProvider> */}
+      <SessionProvider>
         <main>
           <Toaster richColors position="top-right" />
 
@@ -17,7 +17,7 @@ function App() {
             ))}
           </Routes>
         </main>
-      {/* </SessionProvider> */}
+      </SessionProvider>
     </Router>
   );
 }
