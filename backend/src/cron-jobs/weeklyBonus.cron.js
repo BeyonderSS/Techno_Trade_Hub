@@ -20,7 +20,8 @@ export const startWeeklyBonusJob = () => {
   cron.schedule('0 0 * * Sun', async () => { // Every Sunday at 12 AM
     console.log('Running Optimized Weekly Bonus distribution job...');
     try {
-      const users = await User.find({}).select('_id directReferrals walletBalance');
+      // Fetch only users with role 'user'
+      const users = await User.find({ roles: 'user' }).select('_id directReferrals walletBalance'); // ADDED ROLE FILTER
 
       const userWalletUpdates = [];
       const transactionCreations = [];
@@ -76,7 +77,7 @@ export const startWeeklyBonusJob = () => {
               });
           }
 
-          if (!weeklyBonusTracking || weeklyBonusTracking.status === 'pending' || weeklyBonusTracking.bonusAmountEligular < bonusAmount) {
+          if (!weeklyBonusTracking || weeklyBonusTracking.status === 'pending' || weeklyBonusTracking.bonusAmountEligible < bonusAmount) { // Corrected typo: bonusAmountEligular -> bonusAmountEligible
               userWalletUpdates.push({
                   updateOne: {
                       filter: { _id: userId },
@@ -98,7 +99,7 @@ export const startWeeklyBonusJob = () => {
 
               weeklyBonusTrackingWrites.push({
                   updateOne: {
-                      filter: { userId, weekStartDate: startOfWeek }, // Use this filter for the final status update
+                      filter: { userId, weekStartDate: startOfWeek },
                       update: { $set: { status: 'paid' } }
                   }
               });
