@@ -38,7 +38,7 @@ export default function SidebarMenuContent() {
         <SidebarGroupContent>
           <SidebarMenu className="space-y-2 px-4 py-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-7 w-full rounded-md bg-gray-200" />
+              <Skeleton key={i} className="h-7 w-full rounded-md " />
             ))}
           </SidebarMenu>
         </SidebarGroupContent>
@@ -73,8 +73,8 @@ export default function SidebarMenuContent() {
                       ${
                         openCollapsibleIndex === idx ||
                         item.items.some((sub) => isActive(sub.href))
-                          ? "bg-purple-100 text-purple-700"
-                          : "hover:bg-gray-100 text-gray-600"
+                          ? " text-white bg-gradient-to-r hover:from-green-600 to-blue-600"
+                          : "hover:bg-gradient-to-r hover:from-green-600 hover:to-blue-600 text-white transition-colors duration-200"
                       }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -93,8 +93,8 @@ export default function SidebarMenuContent() {
                         className={`w-full rounded px-2 py-1.5 text-sm transition
                           ${
                             isActive(sub.href)
-                              ? "bg-purple-200 text-gray-800 font-semibold"
-                              : "hover:bg-gray-50 text-gray-600"
+                              ? "bg-white text-white font-semibold"
+                              : "hover:bg-gradient-to-r hover:from-green-600 hover:to-blue-600 text-white transition-colors duration-200"
                           }`}
                       >
                         <Link
@@ -118,8 +118,8 @@ export default function SidebarMenuContent() {
                   className={`w-full rounded-md px-3 py-2 text-base font-medium transition
                     ${
                       isActive(item.href)
-                        ? "bg-purple-300 text-purple-800 shadow-sm"
-                        : "hover:bg-gray-100 text-gray-700"
+                        ? " text-white shadow-sm"
+                        : "hover:bg-gradient-to-r hover:from-green-600 hover:to-blue-600 text-white transition-colors duration-200"
                     }`}
                 >
                   <Link

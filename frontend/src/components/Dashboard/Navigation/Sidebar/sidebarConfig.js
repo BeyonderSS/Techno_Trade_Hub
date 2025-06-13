@@ -1,51 +1,91 @@
 import {
-  Home,
   Users,
-  Package,
-  TrendingUp,
-  History,
-  Layers,
-  Gift,
-  UserPlus,
-  FileText,
-  Wallet,
-  Banknote,
-  Settings,
-  ArrowRightLeft,
-  BarChart3,
-  DollarSign,
-  ListChecks,
-  Coins,
-  Building2,
-  ShoppingCart,
+  UserCheck,
   LayoutGrid,
-  Tag,
+  PackageSearch, // This icon might be replaced later if needed for other income types
+  Wallet,
+  CreditCard,
+  Bot,
+  BarChart2,
+  UserPlus,
+  Layers3, // Corrected for Level Income
+  BadgeDollarSign,
+  LifeBuoy,
+  MessageCircleQuestion,
+  FileText,
   ShieldCheck,
-  Milestone,
-  Boxes,
-  TicketPercent,
-  IndianRupee,
+  BarChart3,
+  Gift,
+  Settings,
+  ShoppingCart,
   Ticket,
-  Proportions,
+  History,
+  TrendingUp,
+  DollarSign, // Added for Wallet History
 } from "lucide-react";
 
 export const sidebarConfig = {
-  shared: [{ label: "Home", icon: Home, href: "/dashboard" }],
+  shared: [
+    {
+      label: "Dashboard",
+      icon: LayoutGrid,
+      href: "/user/dashboard", // Added href for dashboard
+    },
+  ],
 
   user: [
+
+    {
+      label: "Report",
+      icon: Users,
+      items: [
+        {
+          label: "Referral Income",
+          icon: Users ,
+          href: "/user/income-reports/referral",
+        },
+        {
+          label: "Salary Income",
+          icon: DollarSign ,
+          href: "/user/income-reports/salary-income", 
+        },
+        {
+          label: "Team Performance",
+          icon: UserPlus,
+          href: "/user/income-reports/team-performance", 
+        },
+        {
+          label: "Level Income",
+          icon: UserPlus,
+          href: "/user/income-reports/level-income", // Updated path for consistency
+        },
+        {
+          label: "Weekly Bonus",
+          icon: UserPlus,
+          href: "/user/income-reports/weekly-bonus", // Updated path for consistency
+        },
+        {
+          label: "Trade history",
+          icon: TrendingUp ,
+          href: "/user/network/trase-history", // Updated path for consistency
+        },
+      ],
+    },
+
+
     {
       label: "Network",
       icon: Users,
       items: [
         {
-          label: "My Membership",
+          label: "Referral Income",
           icon: ShieldCheck,
-          href: "/dashboard/membership",
+          href: "/user/income-reports/referral",
         },
         {
           label: "Referrals",
           icon: UserPlus,
-          href: "/dashboard/referrals",
+          href: "/user/network/referrals", // Updated path for consistency
         },
       ],
     },
@@ -54,16 +94,27 @@ export const sidebarConfig = {
       label: "Income",
       icon: BarChart3,
       items: [
-        // {
-        //   label: "Level Income",
-        //   href: "/dashboard/income/level",
-        //   icon: Layers,
-        // },
+        {
+          label: "Level Income",
+          href: "/user/income-reports/level", // Corrected path for Level Income
+          icon: Layers3, // Used Layers3 as you imported it for levels
+        },
         {
           label: "Rewards",
-          href: "/dashboard/income/rewards",
+          href: "/user/income-reports/rewards", // Updated path for consistency
           icon: Gift,
         },
+        // Adding other income reports back based on previous discussion, just to be comprehensive
+        {
+            label: "Monthly Salary Income",
+            href: "/user/income-reports/monthly-salary",
+            icon: BarChart2, // You can choose a suitable icon
+        },
+        {
+            label: "Team Reward Income",
+            href: "/user/income-reports/team-reward",
+            icon: BarChart2, // You can choose a suitable icon
+        },
       ],
     },
 
@@ -73,25 +124,38 @@ export const sidebarConfig = {
       items: [
         {
           label: "History",
-          href: "/dashboard/wallet/history",
+          href: "/user/wallet/history", // Updated path for consistency
           icon: History,
         },
         {
           label: "Manage",
-          href: "/dashboard/wallet/manage",
+          href: "/user/wallet/manage", // Updated path for consistency
           icon: Settings,
         },
       ],
     },
+
     {
-      label: "Orders",
-      icon: ShoppingCart,
-      href: "/dashboard/orders",
+      label: "AI bot",
+      icon: Bot,
+      items: [
+        {
+          label: "Ai Trade Bot",
+          icon: ShieldCheck,
+          href: "/user/aibot/aitradebot", 
+        },
+        {
+          label: "Trade Report",
+          icon: UserPlus, // Choose a suitable icon for reports if different
+          href: "/user/aibot/trade-report", 
+        },
+      ],
     },
+
     {
       label: "Tickets",
       icon: Ticket,
-      href: "/dashboard/tickets",
+      href: "/user/tickets", // Updated path for consistency
     },
     // {
     //   label: "Profile Settings",
@@ -100,184 +164,70 @@ export const sidebarConfig = {
     // },
   ],
 
-  vendor: [
-    {
-      label: "Products",
-      icon: Package,
-      href: "/dashboard/products",
-    },
-    {
-      label: "Orders",
-      icon: ShoppingCart,
-      href: "/dashboard/orders",
-    },
-    {
-      label: "Tickets",
-      icon: Ticket,
-      href: "/dashboard/tickets",
-    },
-    // {
-    //   label: "Profile Settings",
-    //   icon: Settings,
-    //   href: "/dashboard/profile",
-    // },
-  ],
-
-  "sales-rep": [
-    {
-      label: "Vendors",
-      icon: Package,
-      href: "/dashboard/sales-rep/vendors",
-    },
-    {
-      label: "Franchises",
-      icon: Building2,
-      href: "/dashboard/sales-rep/franchises",
-    },
-    {
-      label: "Tickets",
-      icon: Ticket,
-      href: "/dashboard/tickets",
-    },
-  ],
-  "franchise-admin": [
-    // {
-    //   label: "Vendors",
-    //   icon: Package,
-    //   href: "/dashboard/vendors",
-    // },
-    {
-      label: "Users",
-      icon: Users,
-      href: "/dashboard/users",
-    },
-    {
-      label: "Rewards",
-      icon: Milestone,
-      href: "/dashboard/income/rewards",
-    },
-    {
-      label: "Wallet",
-      icon: Wallet,
-      items: [
-        {
-          label: "History",
-          href: "/dashboard/wallet/history",
-          icon: History,
-        },
-        {
-          label: "Manage",
-          href: "/dashboard/wallet/manage",
-          icon: Settings,
-        },
-      ],
-    },
-    {
-      label: "Tickets",
-      icon: Ticket,
-      href: "/dashboard/tickets",
-    },
-  ],
-  admin: [
-    {
-      label: "Distribution",
-      icon: Package,
-      items: [
-        {
-          label: "Vendors",
-          href: "/dashboard/admin/vendors",
-          icon: Package,
-        },
-        {
-          label: "Franchises",
-          href: "/dashboard/admin/vendors/franchises",
-          icon: UserPlus,
-        },
-        {
-          label: "SalesRep",
-          icon: Users,
-          href: "/dashboard/admin/salesrep",
-        },
-      ],
-    },
-
-    {
-      label: "Reports",
-      icon: IndianRupee,
-      items: [
-        {
-          label: "Sales",
-          href: "/dashboard/admin/reports/sales",
-          icon: FileText,
-        },
-        {
-          label: "Membership",
-          href: "/dashboard/admin/reports/membership",
-          icon: Layers,
-        },
-        {
-          label: "Reward Distribution",
-          href: "/dashboard/admin/reports/rewards",
-          icon: UserPlus,
-        },
-      ],
-    },
-    {
-      label: "Rewards",
-      icon: Milestone,
-      items: [
-        {
-          label: "Membership",
-          href: "/dashboard/admin/manage/membership-milestones",
-          icon: FileText,
-        },
-        {
-          label: "Cashbacks",
-          href: "/dashboard/admin/manage/cashbacks-milestones",
-          icon: Layers,
-        },
-        {
-          label: "Franchise",
-          href: "/dashboard/admin/manage/franchise-milestones",
-          icon: UserPlus,
-        },
-      ],
-    },
-    {
-      label: "Users",
-      icon: Users,
-      href: "/dashboard/admin/users",
-    },
-
-    {
-      label: "Transactions",
-      icon: Banknote,
-      href: "/dashboard/admin/transactions",
-    },
-    {
-      label: "Packages",
-      icon: Boxes,
-      href: "/dashboard/admin/packages",
-    },
-    {
-      label: "Banners",
-      icon: Tag,
-      href: "/dashboard/admin/banners",
-    },
-    {
-      label: "Coupon",
-      icon: TicketPercent,
-      href: "/dashboard/admin/coupon",
-    },
-    {
-      label: "Tickets",
-      icon: Ticket,
-      href: "/dashboard/tickets",
-    },
-    {
-      label: "Categories",
-      icon: Proportions,
-      href: "/dashboard/category"
-    }
-  ],
+  // admin: [
+  //   {
+  //     label: "Users",
+  //     icon: Users,
+  //     items: [
+  //       {
+  //         label: "All Users",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //       {
+  //         label: "Active Users",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     label: "Financial Reports",
+  //     icon: BarChart2,
+  //     items: [
+  //       {
+  //         label: "Package Purchase History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //       {
+  //         label: "Referral Income History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //       {
+  //         label: "Level Income History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //       {
+  //         label: "ROI Income History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //       {
+  //         label: "Monthly Salary Income History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //       {
+  //         label: "Team Reward Income History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     label: "Withdrawal",
+  //     icon: BadgeDollarSign,
+  //     items: [
+  //       {
+  //         label: "Withdrawal History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     label: "Help & Support",
+  //     icon: MessageCircleQuestion,
+  //     items: [
+  //       {
+  //         label: "Raise Ticket History",
+  //         href: "AuthenticatedRoutes.LEVEL_INCOME_REPORT",
+  //       },
+  //     ],
+  //   },
+  // ],
 };

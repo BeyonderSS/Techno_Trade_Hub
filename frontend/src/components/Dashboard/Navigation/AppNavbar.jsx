@@ -19,7 +19,7 @@ function AppNavbar() {
 
   return (
     <TooltipProvider>
-      <nav className="border-2 border-purple-700 rounded-xl md:mx-10 mx-6 my-6">
+      <nav className="border-2 border-white rounded-xl md:mx-10 mx-6 my-6">
         <div className="mx-auto px-6 py-1 sm:px-6">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
@@ -27,7 +27,7 @@ function AppNavbar() {
                 <SidebarTrigger />
               </div>
               <div className="flex items-center">
-                <h1 className="md:text-2xl font-bold text-purple-600">
+                <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
                   {breadcrumbTitle}
                 </h1>
               </div>
@@ -44,7 +44,7 @@ function AppNavbar() {
                     className="md:h-15 h-12 w-12 md:w-15 rounded-full border border-white object-cover"
                   />
                   <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full border border-black/60 shadow-md hover:bg-gray-100">
-                    <Camera className="h-2 w-2 text-gray-600 cursor-pointer" />
+                    <Camera className="h-2 w-2 text-gray-900 cursor-pointer" />
                   </div>
                 </div>
                 <p className="font-semibold text-sm ml-3">Hi,{"user?.name"}</p>
@@ -56,7 +56,7 @@ function AppNavbar() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-gray-700 hover:bg-purple-100 hover:text-purple-700"
+                      className="text-white hover:bg-purple-100 hover:text-blue-700"
                     >
                       <Home className="h-5 w-5" />
                     </Button>
