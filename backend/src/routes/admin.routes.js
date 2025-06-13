@@ -1,6 +1,6 @@
 // routes/adminRoutes.js (Example)
 import express from 'express';
-import { protect, authorize } from '../middleware/authMiddleware.js'; // Your auth middlewares
+import { protect, authorize } from '../middlewares/auth.middleware.js'; // Your auth middlewares
 import { getAdminHome } from '../controllers/admin.controller.js';
 
 const router = express.Router();
