@@ -15,6 +15,13 @@ import VerifyOtp from "../pages/Auth/VerifyOtp";
 import Register from "../pages/Auth/Register";
 import AiTradeEngineHome from "../pages/Dashboard/Users/AIbot";
 import WithdrawalsPage from "../pages/Dashboard/Common/Withdrawl";
+import UsersPage from "../pages/Dashboard/Admin/user/Userpage";
+import UserDetails from "../pages/Dashboard/Admin/user/UsersDetailsPage";
+import AdminLevelIncomePage from "../pages/Dashboard/Admin/reports/AdminLevelIncome";
+import AdminMonthlySalaryReport from "../pages/Dashboard/Admin/reports/AdminMonthlySalaryReport";
+import AdminTeamPerformancePage from "../pages/Dashboard/Admin/reports/AdminTeamPerformance";
+import AdminReferralIncomePage from "../pages/Dashboard/Admin/reports/AdminReferralIncomeReports";
+import AdminWeeklyBonusPage from "../pages/Dashboard/Admin/reports/AdminWeeklyBonus";
 
 const routes = [
   {
@@ -49,6 +56,49 @@ const routes = [
       </MainLayout>
     ),
   },
+
+  // admin paths
+  {
+    path: "/dashboard/admin/reports/referral-income",
+    element: (
+      <DashboardLayout>
+        <AdminReferralIncomePage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/dashboard/admin/reports/salary-income",
+    element: (
+      <DashboardLayout>
+        <AdminMonthlySalaryReport />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/dashboard/admin/reports/team-performance",
+    element: (
+      <DashboardLayout>
+        <AdminTeamPerformancePage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/dashboard/admin/reports/level-income",
+    element: (
+      <DashboardLayout>
+        <AdminLevelIncomePage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/dashboard/admin/reports/weekly-bonus",
+    element: (
+      <DashboardLayout>
+        <AdminWeeklyBonusPage />
+      </DashboardLayout>
+    ),
+  },
+
   {
     // This path can be the base for all user-specific dashboard routes
     // or you can define each dashboard page separately if you prefer.
@@ -71,7 +121,7 @@ const routes = [
   },
   {
     // Route for Referral Income Reports
-    path: "/user/income-reports/referral",
+    path: "/dashboard/user/reports/referral-income",
     element: (
       <DashboardLayout>
         <ReferralIncomeReports />
@@ -80,7 +130,7 @@ const routes = [
   },
 
   {
-    path: "/user/income-reports/salary-income",
+    path: "/dashboard/user/reports/salary-income",
     element: (
       <DashboardLayout>
         <SalaryIncomePage />
@@ -88,7 +138,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/income-reports/team-performance",
+    path: "/dashboard/user/reports/team-performance",
     element: (
       <DashboardLayout>
         <TeamPerformance />
@@ -96,7 +146,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/income-reports/level-income",
+    path: "/dashboard/user/reports/level-income",
     element: (
       <DashboardLayout>
         <LevelIncomePage />
@@ -104,7 +154,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/income-reports/weekly-bonus",
+    path: "/dashboard/user/reports/weekly-bonus",
     element: (
       <DashboardLayout>
         <WeeklyBonusPage />
@@ -112,7 +162,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/network/trase-history",
+    path: "/dashboard/user/reports/trade-history",
     element: (
       <DashboardLayout>
         <TradeHistoryPage />
@@ -136,9 +186,25 @@ const routes = [
       </DashboardLayout>
     ),
   },
+  {
+    path: "/dashboard/admin/users",
+    element: (
+      <DashboardLayout>
+        <UsersPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/dashboard/admin/user/:id",
+    element: (
+      <DashboardLayout>
+        <UserDetails />
+      </DashboardLayout>
+    ),
+  },
 
   {
-    path: "*", // Catch-all route for any undefined paths
+    path: "*", // Catch-all route for any undefined paths  path="/dashboard/admin/users/:id"
     element: <h1>404 - Page Not Found</h1>,
   },
 ];

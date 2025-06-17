@@ -48,6 +48,7 @@ import {
 } from "../../../../api/investment.api"; // Adjust path as needed
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BanknoteArrowDown } from "lucide-react";
 
 // A dummy admin notes state for approve/reject dialogs (can be extended to an input)
 const DEFAULT_ADMIN_NOTES = "Action processed by admin.";
@@ -106,7 +107,7 @@ export default function AdminWithdrawalsPage() {
         setTotalPages(
           Math.ceil(
             (pendingRes.pagination.total + completedRes.pagination.total) /
-              itemsPerPage
+            itemsPerPage
           )
         );
       } else if (statusFilter === "pending") {
@@ -198,7 +199,7 @@ export default function AdminWithdrawalsPage() {
         );
         toast.success(
           response.message ||
-            "Withdrawal request rejected and amount credited back!"
+          "Withdrawal request rejected and amount credited back!"
         );
       }
       setIsConfirmDialogOpen(false); // Close dialog
@@ -249,10 +250,11 @@ export default function AdminWithdrawalsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-purple-400">
+            <h1 className="text-3xl font-bold text-purple-400 flex items-center gap-3">
               Admin Withdrawals
+              <BanknoteArrowDown className="h-8 w-8 text-purple-700" />
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm">
               Review and manage user withdrawal requests.
             </p>
           </div>
@@ -342,11 +344,11 @@ export default function AdminWithdrawalsPage() {
                       <TableCell className="text-gray-300">
                         {withdrawal.cryptoWalletAddress
                           ? `${withdrawal.cryptoWalletAddress.substring(
-                              0,
-                              6
-                            )}...${withdrawal.cryptoWalletAddress.substring(
-                              withdrawal.cryptoWalletAddress.length - 4
-                            )}`
+                            0,
+                            6
+                          )}...${withdrawal.cryptoWalletAddress.substring(
+                            withdrawal.cryptoWalletAddress.length - 4
+                          )}`
                           : "N/A"}
                       </TableCell>
                       <TableCell className="text-gray-300">
@@ -453,8 +455,8 @@ export default function AdminWithdrawalsPage() {
                 {loading
                   ? "Processing..."
                   : confirmActionType === "approve"
-                  ? "Approve"
-                  : "Reject"}
+                    ? "Approve"
+                    : "Reject"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -539,9 +541,9 @@ export default function AdminWithdrawalsPage() {
                   <span className="text-gray-200">
                     {selectedTransaction?.transactionDate
                       ? format(
-                          new Date(selectedTransaction.transactionDate),
-                          "PPP p"
-                        )
+                        new Date(selectedTransaction.transactionDate),
+                        "PPP p"
+                      )
                       : "N/A"}
                   </span>
                 </div>
@@ -554,7 +556,7 @@ export default function AdminWithdrawalsPage() {
                   >
                     {selectedTransaction?.status
                       ? selectedTransaction.status.charAt(0).toUpperCase() +
-                        selectedTransaction.status.slice(1)
+                      selectedTransaction.status.slice(1)
                       : "N/A"}
                   </span>
                 </div>
