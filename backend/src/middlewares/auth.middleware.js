@@ -67,7 +67,7 @@ export const authorize = (...roles) => {
       return res.status(403).json({ message: "Not authorized, no user roles found" });
     }
 
-    const hasPermission = roles.some((role) => req.user.role.includes(role));
+    const hasPermission = roles.some((role) => req.user.roles.includes(role));
 
     if (hasPermission) {
       next(); // User has the required role(s), proceed

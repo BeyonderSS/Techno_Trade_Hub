@@ -6,7 +6,8 @@ import { Transaction } from '../models/Transaction.model.js';
 import { WeeklyBonusTracking } from '../models/WeeklyBonusTracking.model.js';
 // import { ReferralBonus } from '../models/ReferralBonus.model.js'; // Not directly used in requested metrics, but good to keep in mind
 import { getISTTodayRange } from '../utils/timezoneHelper.js'; // Import the timezone helper
-
+import mongoose from 'mongoose';
+import moment from 'moment-timezone'; // For date manipulation and formatting
 /**
  * @desc Get Admin Home Dashboard Data
  * @route GET /api/admin/home
@@ -16,7 +17,7 @@ export const getAdminHome = async (req, res) => {
     try {
         // Assuming req.user is populated by your authentication middleware
         // and contains the admin user's details.
-        const adminUser = await User.findById(req.user._id).select('name contactNumber email roles');
+        const adminUser = await User.findById(req.user._id).select('name contactNumber email roles referralCode');
 
         if (!adminUser || adminUser.roles !== 'admin') {
             return res.status(403).json({ message: 'Access denied. Admin role required.' });
@@ -80,7 +81,8 @@ export const getAdminHome = async (req, res) => {
             admin: {
                 name: adminUser.name,
                 contactNumber: adminUser.contactNumber,
-                email: adminUser.email
+                email: adminUser.email,
+                referralCode:adminUser.referralCode
             },
             dashboardData: {
                 totalPayout: totalPayout.toFixed(2),
@@ -182,7 +184,7 @@ export const getAllUsers = async (req, res) => {
             .sort(sortOptions)
             .skip(skip)
             .limit(limitNum);
-
+// console.log(users);
         return res.status(200).json({
             success: true,
             count: users.length,          // Count of users in the current page
@@ -213,7 +215,7 @@ export const getAllUsers = async (req, res) => {
 export const getParticularUserDetail = async (req, res) => {
     try {
         const { id } = req.params; // Get user ID from URL parameters
-
+//   console.log(id)
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: 'Invalid User ID format.' });
         }
@@ -222,9 +224,9 @@ export const getParticularUserDetail = async (req, res) => {
 
         // --- 1. Fetch User Details ---
         const user = await User.findById(userId).select(
-            'name email contactNumber walletBalance referralCode isEmailVerified createdAt directReferrals totalInvestment'
+            'name email contactNumber walletBalance referralCode roles isEmailVerified createdAt directReferrals totalInvestment'
         );
-
+//   console.log(user)
         if (!user || user.roles !== 'user') {
             return res.status(404).json({ message: 'User not found or is not a standard user account.' });
         }
