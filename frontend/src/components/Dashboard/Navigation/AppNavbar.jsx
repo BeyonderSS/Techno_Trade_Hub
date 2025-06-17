@@ -29,7 +29,7 @@ function AppNavbar() {
                 <SidebarTrigger />
               </div>
               <div className="flex items-center">
-                <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
+                <h1 className="md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-600">
                   {breadcrumbTitle}
                 </h1>
               </div>

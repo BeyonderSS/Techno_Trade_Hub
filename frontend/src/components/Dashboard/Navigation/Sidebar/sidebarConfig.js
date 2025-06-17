@@ -7,7 +7,9 @@ import {
   TrendingUp,
   DollarSign,
   ArrowDownCircle,
-  User, // Added for Wallet History
+  User,
+  CircleDollarSign,
+  Network, // Added for Wallet History
 } from "lucide-react";
 
 export const sidebarConfig = {
@@ -40,32 +42,32 @@ export const sidebarConfig = {
         {
           label: "Referral Income",
           icon: Users,
-          href: "/dashbaord/reports/referral",
+          href: "/dashboard/user/reports/referral-income",
         },
         {
           label: "Salary Income",
           icon: DollarSign,
-          href: "/dashbaord/reports/salary-income",
+          href: "/dashboard/user/reports/salary-income",
         },
         {
           label: "Team Performance",
           icon: UserPlus,
-          href: "/dashbaord/reports/team-performance",
+          href: "/dashboard/user/reports/team-performance",
         },
         {
           label: "Level Income",
           icon: UserPlus,
-          href: "/dashbaord/reports/level-income", // Updated path for consistency
+          href: "/dashboard/user/reports/level-income", // Updated path for consistency
         },
         {
           label: "Weekly Bonus",
           icon: UserPlus,
-          href: "/dashbaord/reports/weekly-bonus", // Updated path for consistency
+          href: "/dashboard/user/reports/weekly-bonus", // Updated path for consistency
         },
         {
           label: "Trade history",
           icon: TrendingUp,
-          href: "/dashbaord/reports/trade-history", // Updated path for consistency
+          href: "/dashboard/user/reports/trade-history", // Updated path for consistency
         },
       ],
     },
@@ -75,7 +77,7 @@ export const sidebarConfig = {
     {
       label: "Users",
       icon: User,
-      href: "/dashboard/users"
+      href: "/dashboard/admin/users"
     }
     ,
     {
@@ -91,33 +93,29 @@ export const sidebarConfig = {
         {
           label: "Referral Income",
           icon: Users,
-          href: "/dashbaord/reports/referral",
+          href: "/dashboard/admin/reports/referral-income",
         },
         {
           label: "Salary Income",
-          icon: DollarSign,
-          href: "/dashbaord/reports/salary-income",
+          icon: CircleDollarSign,
+          href: "/dashboard/admin/reports/salary-income",
         },
         {
           label: "Team Performance",
           icon: UserPlus,
-          href: "/dashbaord/reports/team-performance",
+          href: "/dashboard/admin/reports/team-performance",
         },
         {
           label: "Level Income",
-          icon: UserPlus,
-          href: "/dashbaord/reports/level-income", // Updated path for consistency
+          icon: Network ,
+          href: "/dashboard/admin/reports/level-income", // Updated path for consistency
         },
         {
           label: "Weekly Bonus",
           icon: UserPlus,
-          href: "/dashbaord/reports/weekly-bonus", // Updated path for consistency
+          href: "/dashboard/admin/reports/weekly-bonus", // Updated path for consistency
         },
-        {
-          label: "Trade history",
-          icon: TrendingUp,
-          href: "/dashbaord/reports/trade-history", // Updated path for consistency
-        },
+        
       ],
     },
 
