@@ -22,7 +22,7 @@ const transactionSchema = new mongoose.Schema({
     index: true
   },
   amount: { type: Number, required: true },
-  transactionDate: { type: Date, required: true, index: true },
+  transactionDate: { type: Date, index: true },
   status: { type: String, enum: ['pending', 'completed', 'failed', 'cancelled'], default: 'pending' },
  txnId: { type: String, unique: true, sparse: true }, // Unique transaction ID for tracking
   relatedEntityId: { type: mongoose.Schema.Types.ObjectId },

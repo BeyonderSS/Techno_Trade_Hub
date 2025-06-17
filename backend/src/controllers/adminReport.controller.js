@@ -25,7 +25,7 @@ import { Investment } from '../models/Investment.model.js';
 export const getAdminReferralBonusDistributionReport = async (req, res) => {
     try {
         const { startDate, endDate, page = 1, limit = 10, searchUser } = req.query;
-
+//   console.log("req.query admin refereral report",req.query);
         const query = {
             type: 'direct_referral_bonus',
             status: 'completed'
@@ -52,10 +52,10 @@ export const getAdminReferralBonusDistributionReport = async (req, res) => {
             const userIds = users.map(user => user._id);
             query.userId = { $in: userIds };
         }
-
+        // console.log(query,"query for admin referral bonus report")
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const totalTransactions = await Transaction.countDocuments(query);
-
+    //   console.log(totalTransactions,"totaltransaction referral bonus report admin")
         const referralBonusTransactions = await Transaction.find(query)
             .populate('userId', 'name email')
             .populate('relatedEntityId', 'name email')
@@ -63,8 +63,7 @@ export const getAdminReferralBonusDistributionReport = async (req, res) => {
             .sort({ transactionDate: -1 })
             .skip(skip)
             .limit(parseInt(limit))
-            .lean();
-
+        //    console.log(referralBonusTransactions,"referralBonusTransactions")
         res.status(200).json({
             success: true,
             data: referralBonusTransactions,
@@ -99,7 +98,7 @@ export const getAdminReferralBonusDistributionReport = async (req, res) => {
 export const getAdminWeeklyBonusDistributionReport = async (req, res) => {
     try {
         const { startDate, endDate, page = 1, limit = 10, searchUser } = req.query;
-
+    // console.log("req.query admin weekly bonus report",req.query);
         const query = {
             type: 'weekly_bonus',
             status: 'completed'
@@ -125,11 +124,13 @@ export const getAdminWeeklyBonusDistributionReport = async (req, res) => {
 
             const userIds = users.map(user => user._id);
             query.userId = { $in: userIds };
+            // console.log("query admin weekly bonus report",query);
+            // console.log("userIds admin weekly bonus report",userIds);
         }
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const totalTransactions = await Transaction.countDocuments(query);
-
+// console.log(totalTransactions,"totaltransaction weekly bonus report admin")
         const weeklyBonusTransactions = await Transaction.find(query)
             .populate('userId', 'name email')
             .select('amount transactionDate status type txnId userId')
@@ -137,7 +138,7 @@ export const getAdminWeeklyBonusDistributionReport = async (req, res) => {
             .skip(skip)
             .limit(parseInt(limit))
             .lean();
-
+// console.log(weeklyBonusTransactions,"weeklyBonusTransactions")
         res.status(200).json({
             success: true,
             data: weeklyBonusTransactions,
@@ -245,6 +246,8 @@ export const getAdminWithdrawalDistributionReport = async (req, res) => {
  */
 export const getAdminSalaryDistributionReport = async (req, res) => {
     try {
+        // console.log('Request received:', req.query); // Log incoming request query
+
         const { startDate, endDate, page = 1, limit = 10, searchUser } = req.query;
 
         const query = {
@@ -256,13 +259,16 @@ export const getAdminSalaryDistributionReport = async (req, res) => {
             query.transactionDate = {};
             if (startDate) {
                 query.transactionDate.$gte = new Date(startDate);
+            //  console.log('Start Date Filter Applied:', startDate);
             }
             if (endDate) {
                 query.transactionDate.$lte = new Date(endDate);
+                // console.log('End Date Filter Applied:', endDate);
             }
         }
 
         if (searchUser) {
+          //  console.log('Searching for user:', searchUser);
             const users = await User.find({
                 $or: [
                     { name: { $regex: searchUser, $options: 'i' } },
@@ -270,12 +276,16 @@ export const getAdminSalaryDistributionReport = async (req, res) => {
                 ]
             }).select('_id');
 
+           // console.log('Matching Users Found:', users);
             const userIds = users.map(user => user._id);
             query.userId = { $in: userIds };
         }
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
+        // console.log(`Pagination - Page: ${page}, Limit: ${limit}, Skip: ${skip}`);
+
         const totalTransactions = await Transaction.countDocuments(query);
+        // console.log('Total Transactions Found:', totalTransactions);
 
         const salaryTransactions = await Transaction.find(query)
             .populate('userId', 'name email')
@@ -285,7 +295,10 @@ export const getAdminSalaryDistributionReport = async (req, res) => {
             .limit(parseInt(limit))
             .lean();
 
+        // console.log('Fetched Transactions:', salaryTransactions);
+
         if (!salaryTransactions.length) {
+            // console.log('No transactions found.');
             return res.status(200).json({
                 success: true,
                 message: 'No monthly salary transactions found.',
@@ -309,6 +322,9 @@ export const getAdminSalaryDistributionReport = async (req, res) => {
                 totalPages: Math.ceil(totalTransactions / parseInt(limit)),
             },
         });
+
+        // console.log('Response sent successfully.');
+
     } catch (error) {
         console.error('Error fetching admin monthly salary distribution report:', error);
         res.status(500).json({ success: false, message: 'Server error while fetching admin monthly salary distribution report.', error: error.message });
@@ -334,6 +350,8 @@ export const getAdminSalaryDistributionReport = async (req, res) => {
  */
 export const getTopPerformingTeamsReport = async (req, res) => {
     try {
+        console.log('Request received:', req.query); // Log incoming query parameters
+
         const { timeframe = 'monthly', sortBy = 'total_investment', page = 1, limit = 10 } = req.query;
 
         // 1. Define the date range for the report
@@ -343,15 +361,20 @@ export const getTopPerformingTeamsReport = async (req, res) => {
         if (timeframe === 'weekly') {
             startDate = new Date();
             startDate.setDate(endDate.getDate() - 7);
+            console.log('Timeframe set to weekly:', { startDate, endDate });
         } else { // Default to monthly
             startDate = new Date();
             startDate.setMonth(endDate.getMonth() - 1);
+            console.log('Timeframe set to monthly:', { startDate, endDate });
         }
 
-        // 2. Find all team leaders (root users who were not referred by anyone)
+        // 2. Find all team leaders
+        console.log('Fetching team leaders...');
         const teamLeaders = await User.find({ referredBy: { $exists: false } }).select('_id name email').lean();
+        console.log('Team leaders found:', teamLeaders.length);
 
         if (!teamLeaders.length) {
+            console.log('No team leaders found.');
             return res.status(200).json({
                 success: true,
                 message: 'No team leaders found to generate a report.',
@@ -361,11 +384,11 @@ export const getTopPerformingTeamsReport = async (req, res) => {
 
         const performanceReports = [];
 
-        // 3. For each team leader, calculate their team's performance
-        // Note: For very large user bases, this loop could be resource-intensive.
-        // A more advanced implementation might use a scheduled job to pre-calculate these stats.
+        // 3. Calculate performance for each team leader
         for (const leader of teamLeaders) {
-            // Find all members in the team using the BFS traversal logic
+            console.log(`Processing team for leader: ${leader.name}`);
+
+            // BFS traversal for team members
             const teamMemberIds = new Set([leader._id.toString()]);
             const queue = [leader._id];
             let head = 0;
@@ -382,67 +405,49 @@ export const getTopPerformingTeamsReport = async (req, res) => {
                     }
                 }
             }
-            
+
             const teamIds = Array.from(teamMemberIds);
+            console.log(`Team size for ${leader.name}:`, teamIds.length);
             let performanceValue = 0;
 
-            // 4. Calculate performance metric based on 'sortBy'
+            // 4. Calculate performance metric
             if (sortBy === 'total_investment') {
+                console.log(`Calculating total investment for ${leader.name}'s team...`);
                 const investmentResult = await Investment.aggregate([
-                    { $match: { 
-                        userId: { $in: teamIds.map(id => new mongoose.Types.ObjectId(id)) },
-                        startDate: { $gte: startDate, $lte: endDate } 
-                    }},
+                    { $match: { userId: { $in: teamIds.map(id => new mongoose.Types.ObjectId(id)) }, startDate: { $gte: startDate, $lte: endDate } }},
                     { $group: { _id: null, total: { $sum: '$amount' } } }
                 ]);
                 performanceValue = investmentResult.length > 0 ? investmentResult[0].total : 0;
             } else { // sortBy === 'new_members'
+                console.log(`Calculating new members for ${leader.name}'s team...`);
                 performanceValue = await User.countDocuments({
                     _id: { $in: teamIds.map(id => new mongoose.Types.ObjectId(id)) },
                     createdAt: { $gte: startDate, $lte: endDate }
                 });
             }
 
-            // Also, get the total investment from the team for context
-            const totalTeamInvestmentResult = await User.aggregate([
-                { $match: { _id: { $in: teamIds.map(id => new mongoose.Types.ObjectId(id)) } } },
-                { $group: { _id: null, total: { $sum: '$totalInvestment' } } }
-            ]);
-            const totalTeamInvestment = totalTeamInvestmentResult.length > 0 ? totalTeamInvestmentResult[0].total : 0;
-
-
             performanceReports.push({
                 teamLeader: leader,
                 teamSize: teamIds.length,
-                totalTeamInvestment,
                 performanceValue
             });
         }
 
-        // 5. Sort teams by the calculated performance value
+        // 5. Sort teams by performance value
+        console.log('Sorting teams based on performance metric...');
         performanceReports.sort((a, b) => b.performanceValue - a.performanceValue);
 
-        // 6. Paginate the results
+        // 6. Paginate results
         const skip = (parseInt(page) - 1) * parseInt(limit);
+        console.log(`Pagination - Page: ${page}, Limit: ${limit}, Skip: ${skip}`);
+
         const paginatedResults = performanceReports.slice(skip, skip + parseInt(limit));
-        
-        const formattedResults = paginatedResults.map(report => ({
-            teamLeader: report.teamLeader,
-            teamSize: report.teamSize,
-            totalTeamInvestment: report.totalTeamInvestment,
-            [`${timeframe}Performance`]: {
-                metric: sortBy,
-                value: report.performanceValue,
-            }
-        }));
+        console.log('Paginated results:', paginatedResults.length);
 
         res.status(200).json({
             success: true,
-            reportMeta: {
-                sortBy,
-                timeframe,
-            },
-            data: formattedResults,
+            reportMeta: { sortBy, timeframe },
+            data: paginatedResults,
             pagination: {
                 total: performanceReports.length,
                 page: parseInt(page),
@@ -450,6 +455,8 @@ export const getTopPerformingTeamsReport = async (req, res) => {
                 totalPages: Math.ceil(performanceReports.length / parseInt(limit)),
             },
         });
+
+        console.log('Response sent successfully.',res.json());
 
     } catch (error) {
         console.error('Error fetching top performing teams report:', error);

@@ -17,8 +17,8 @@ async function getAllDownlineUsersOptimized(userId) {
     while (queue.length > 0) {
         const currentUserId = queue.shift();
 
-        // Find users who have currentUserId as their referredBy AND have role 'user'
-        const directReferrals = await User.find({ referredBy: currentUserId, role: 'user' }).select('_id'); // ADDED ROLE FILTER
+        // FIX: Changed 'role' to 'roles' to match your schema
+        const directReferrals = await User.find({ referredBy: currentUserId, roles: 'user' }).select('_id');
 
         for (const referral of directReferrals) {
             const referralIdStr = referral._id.toString();
@@ -32,43 +32,48 @@ async function getAllDownlineUsersOptimized(userId) {
 }
 
 const salaryThresholds = [
-    { team: 30000, salary: 50000 },
-    { team: 10000, salary: 20000 },
-    { team: 5000, salary: 8000 },
-    { team: 1000, salary: 4000 },
-    { team: 500, salary: 2500 },
-    { team: 300, salary: 800 },
-    { team: 200, salary: 550 },
-    { team: 100, salary: 300 },
-    { team: 50, salary: 150 },
-    { team: 30, salary: 90 },
-    { team: 20, salary: 60 },
-    { team: 10, salary: 25 },
-    { team: 5, salary: 11 }
+    { team: 14, salary: 50000 },
+    { team: 13, salary: 20000 },
+    { team: 12, salary: 8000 },
+    { team: 11, salary: 4000 },
+    { team: 10, salary: 2500 },
+    { team: 9, salary: 800 },
+    { team: 8, salary: 550 },
+    { team: 7, salary: 300 },
+    { team: 6, salary: 150 },
+    { team: 5, salary: 90 },
+    { team: 4, salary: 60 },
+    { team: 3, salary: 25 },
+    { team: 2, salary: 11 }
 ].sort((a, b) => b.team - a.team);
 
 export const startMonthlySalaryJob = () => {
-  cron.schedule('0 0 28 * *', async () => { // Every month on the 28th at 12 AM
+  cron.schedule('0 0 1 * *', async () => { // Runs every minute
     console.log('Running Optimized Monthly Salary distribution job...');
+
     try {
-      // Fetch only users with role 'user'
-      const users = await User.find({ roles: 'user' }).select('_id walletBalance'); // ADDED ROLE FILTER
+      console.log('Fetching users with roles "user"...'); // Updated log message
+      const users = await User.find({ roles: 'user' }).select('_id walletBalance');
+      console.log(`Total users found: ${users.length}`);
 
       const userWalletUpdates = [];
       const transactionCreations = [];
 
       for (const user of users) {
         const { _id: userId } = user;
+        console.log(`Processing user: ${userId}`);
 
-        // Ensure only 'user' roles are counted in the team size
+        console.log(`Fetching downline users for user: ${userId}`);
         const allDownline = await getAllDownlineUsersOptimized(userId);
         const teamSize = allDownline.size;
+        console.log(`Team size for ${userId}: ${teamSize}`);
 
         let salaryAmount = 0;
 
         for (const threshold of salaryThresholds) {
           if (teamSize >= threshold.team) {
             salaryAmount = threshold.salary;
+            console.log(`Salary assigned for user ${userId}: ${salaryAmount}`);
             break;
           }
         }
@@ -88,10 +93,12 @@ export const startMonthlySalaryJob = () => {
                 txnId: generateTxnId('monthly_salary'),
                 amount: salaryAmount,
                 type: 'monthly_salary',
+                status: 'completed',
                 description: `Monthly salary for team size of ${teamSize}`
               }
             }
           });
+          console.log(`User ${userId} added to wallet and transaction update queue.`);
         }
       }
 
@@ -106,6 +113,7 @@ export const startMonthlySalaryJob = () => {
       }
 
       console.log('Optimized Monthly Salary distribution job completed.');
+
     } catch (error) {
       console.error('Error during Optimized Monthly Salary distribution job:', error);
     }

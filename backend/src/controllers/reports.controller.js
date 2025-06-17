@@ -133,13 +133,16 @@ export const getReferralIncomeReport = async (req, res) => {
 export const getSalaryIncomeReport = async (req, res) => {
   try {
     const { userId } = req.body;
+    // console.log(userId); // Good for debugging, consider removing in production
     const { startDate, endDate, page = 1, limit = 10 } = req.query;
+    // console.log(startDate, endDate, page, limit); // Good for debugging, consider removing in production
 
     if (!userId) {
       return res.status(400).json({ success: false, message: 'User ID is required in the request body.' });
     }
 
     const userExists = await User.findById(userId);
+    console.log(userExists); // Good for debugging, consider removing in production
     if (!userExists) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
@@ -150,6 +153,7 @@ export const getSalaryIncomeReport = async (req, res) => {
       status: 'completed'
     };
 
+    // Apply date filters only if startDate or endDate are provided
     if (startDate || endDate) {
       query.transactionDate = {};
       if (startDate) {
@@ -162,6 +166,7 @@ export const getSalaryIncomeReport = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const totalTransactions = await Transaction.countDocuments(query);
+    console.log(totalTransactions); // Good for debugging, consider removing in production
 
     const salaryTransactions = await Transaction.find(query)
       .populate('userId', 'name email')
@@ -170,11 +175,12 @@ export const getSalaryIncomeReport = async (req, res) => {
       .skip(skip)
       .limit(parseInt(limit))
       .lean();
+    // console.log(salaryTransactions); // Good for debugging, consider removing in production
 
     if (!salaryTransactions || salaryTransactions.length === 0) {
       return res.status(200).json({
         success: true,
-        message: 'No monthly salary income transactions found for this user.',
+        message: 'No monthly salary income transactions found for this user within the specified date range (if any) or overall.',
         data: [],
         pagination: {
           total: 0,
@@ -393,6 +399,7 @@ export const getLevelIncomeReport = async (req, res) => {
 export const getWeeklyBonusReport = async (req, res) => {
   try {
     const { userId } = req.body;
+    console.log(userId)
     const { startDate, endDate, page = 1, limit = 10 } = req.query;
 
     if (!userId) {
@@ -400,6 +407,7 @@ export const getWeeklyBonusReport = async (req, res) => {
     }
 
     const userExists = await User.findById(userId);
+    console.log(userExists)
     if (!userExists) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
@@ -422,7 +430,7 @@ export const getWeeklyBonusReport = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const totalTransactions = await Transaction.countDocuments(query);
-
+console.log(totalTransactions)
     const weeklyBonusTransactions = await Transaction.find(query)
       .populate('userId', 'name email')
       .select('amount transactionDate status type txnId relatedEntityId adminActionNotes')
@@ -430,7 +438,7 @@ export const getWeeklyBonusReport = async (req, res) => {
       .skip(skip)
       .limit(parseInt(limit))
       .lean();
-
+console.log(weeklyBonusTransactions)
     res.status(200).json({
       success: true,
       data: weeklyBonusTransactions,

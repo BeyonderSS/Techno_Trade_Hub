@@ -117,6 +117,7 @@ export const createInvestment = async (req, res) => {
 
   try {
     const { userId, amount } = req.body;
+    console.log(userId,amount)
     let roiPercentageMin, roiPercentageMax;
 
     // 1. Input Validation
@@ -128,22 +129,22 @@ export const createInvestment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid User ID format.' });
     }
 
-    const MIN_INVESTMENT_AMOUNT = 30;
+    const MIN_INVESTMENT_AMOUNT = 0.01;
     if (amount < MIN_INVESTMENT_AMOUNT) {
       return res.status(400).json({ success: false, message: `Minimum investment amount is ${MIN_INVESTMENT_AMOUNT}.` });
     }
 
     // Determine ROI percentages based on amount
-    if (amount >= 30 && amount <= 4999) {
+    if (amount >= 0.1 && amount <= 0.3) {
       roiPercentageMin = 1;
       roiPercentageMax = 3;
-    } else if (amount >= 5000 && amount <= 9999) {
+    } else if (amount >= 0.4 && amount <= 0.5) {
       roiPercentageMin = 3;
       roiPercentageMax = 5;
-    } else if (amount >= 10000 && amount <= 14999) {
+    } else if (amount >= 0.6 && amount <= 0.7) {
       roiPercentageMin = 5;
       roiPercentageMax = 7;
-    } else if (amount >= 15000) {
+    } else if (amount >= 0.8) {
       roiPercentageMin = 7;
       roiPercentageMax = 10;
     } else {
