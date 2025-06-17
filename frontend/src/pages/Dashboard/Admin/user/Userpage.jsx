@@ -72,7 +72,7 @@ export default function UsersPage() {
       }
 
       const data = await fetchUsers(params);
-      console.log("frontend page", data);
+      // console.log("frontend page", data);
       setUsers(data.users);
       setTotalPages(data.totalPages);
       setTotalUsersCount(data.totalUsers); // Update total users count
