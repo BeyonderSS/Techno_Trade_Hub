@@ -26,7 +26,7 @@ import { createInvestmentApi } from "../api/investment.api";
 // For testing on Sepolia, you might use a known ERC-20 token contract or deploy your own.
 // Example of a WETH (Wrapped Ether) contract on Sepolia for demonstration purposes,
 // as a general ERC-20 contract for testing. You'd replace this with actual USDT.
-const USDT_CONTRACT_ADDRESS = "0xfFf9976782d46cC05630D1f6eBc9z3c089aD5592"; // Placeholder: Replace with a real USDT contract on your testnet (e.g., Sepolia)
+const USDT_CONTRACT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; // Placeholder: Replace with a real USDT contract on your testnet (e.g., Sepolia)
 const USDT_ABI = [
   // Minimal ABI for transfer function
   "function transfer(address to, uint256 amount) returns (bool)",
@@ -61,8 +61,8 @@ export function InvestDialog() {
 
   const { user, loading: userSessionLoading } = useSession(); // Get user object from session
 
-  const MIN_INVESTMENT_USD = 30;
-  const TARGET_WALLET_ADDRESS = "0xfd4120ABD1061b9C44Ab10A49A1E6048B31F2C3a"; // Dummy recipient address
+  const MIN_INVESTMENT_USD = 0.01;
+  const TARGET_WALLET_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; 
 
   useEffect(() => {
     // This effect runs only on the client side after initial render
@@ -165,13 +165,11 @@ export function InvestDialog() {
         toast.error("Wallet connection rejected by user.");
       } else {
         setErrorMessage(
-          `Failed to connect wallet: ${
-            error.message || "An unknown error occurred."
+          `Failed to connect wallet: ${error.message || "An unknown error occurred."
           }`
         );
         toast.error(
-          `Failed to connect wallet: ${
-            error.message || "An unknown error occurred."
+          `Failed to connect wallet: ${error.message || "An unknown error occurred."
           }`
         );
       }
@@ -280,10 +278,10 @@ export function InvestDialog() {
         displayErrorMessage = error.message.includes("user rejected transaction")
           ? "Transaction rejected by user."
           : error.message.includes("insufficient funds")
-          ? "Insufficient funds for transaction."
-          : error.message.includes("contract not deployed")
-          ? "USDT contract not found on the current network. Please check the contract address and network."
-          : error.message;
+            ? "Insufficient funds for transaction."
+            : error.message.includes("contract not deployed")
+              ? "USDT contract not found on the current network. Please check the contract address and network."
+              : error.message;
       }
       setErrorMessage(displayErrorMessage);
       toast.error(displayErrorMessage);
@@ -318,11 +316,11 @@ export function InvestDialog() {
           <DialogDescription className="text-center text-gray-400 mt-2">
             {isWalletConnected
               ? `You are connected with: ${walletAddress.substring(
-                  0,
-                  6
-                )}...${walletAddress.substring(
-                  walletAddress.length - 4
-                )}. Enter the amount you wish to invest.`
+                0,
+                6
+              )}...${walletAddress.substring(
+                walletAddress.length - 4
+              )}. Enter the amount you wish to invest.`
               : "Connect a crypto wallet to proceed with your investment."}
           </DialogDescription>
         </DialogHeader>
@@ -426,8 +424,8 @@ export function InvestDialog() {
                 {isSubmittingPayment
                   ? "Sending Payment..."
                   : isSubmittingInvestment
-                  ? "Finalizing Investment..."
-                  : "Pay USDT and Invest"}
+                    ? "Finalizing Investment..."
+                    : "Pay USDT and Invest"}
               </Button>
               <Button
                 onClick={() => {

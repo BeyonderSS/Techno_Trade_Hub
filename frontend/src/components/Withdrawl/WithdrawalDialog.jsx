@@ -17,7 +17,7 @@ import { useSession } from "../../context/SessionContext"; // Assuming this cont
 import { raiseWithdrawalRequestApi } from "../../api/investment.api"; // Corrected import path based on the previous conversation
 import { toast } from "sonner";
 
-const MINIMUM_WITHDRAWL_AMT = 10;
+// const MINIMUM_WITHDRAWL_AMT = 10;
 const TRANSACTION_FEE_PERCENTAGE = 0.05; // 5% fee
 
 export function WithdrawalDialog({ open, onOpenChange,onSucceess }) {
@@ -70,10 +70,10 @@ export function WithdrawalDialog({ open, onOpenChange,onSucceess }) {
       return;
     }
 
-    if (parsedAmount < MINIMUM_WITHDRAWL_AMT) {
-      setError(`Minimum withdrawal amount is $${MINIMUM_WITHDRAWL_AMT}.`);
-      return;
-    }
+    // if (parsedAmount < MINIMUM_WITHDRAWL_AMT) {
+    //   setError(`Minimum withdrawal amount is $${MINIMUM_WITHDRAWL_AMT}.`);
+    //   return;
+    // }
 
     if (walletBalance !== undefined && totalAmountToDeduct > walletBalance) {
       setError(

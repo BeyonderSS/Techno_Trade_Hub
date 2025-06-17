@@ -1,120 +1,67 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+// Assuming this path is correct for your API utility
+import { getAdminMonthlySalaryReport } from "../../../../api/adminreports";
 
 const AdminMonthlySalaryReport = () => {
-  // Hardcoded dummy data for Monthly Salary Reports
-  const dummyMonthlySalaryData = [
-    {
-      id: 1,
-      userId: { username: "salaryUser01" },
-      amount: 150.00, // Monthly salary amount
-      rewardTier: "Tier 1", // Example: Bronze, Silver, Gold, or number of contributors
-      creditedOn: "2023-11-01T08:00:00Z",
-    },
-    {
-      id: 2,
-      userId: { username: "salaryUser02" },
-      amount: 250.00,
-      rewardTier: "Tier 2",
-      creditedOn: "2023-11-01T09:00:00Z",
-    },
-    {
-      id: 3,
-      userId: { username: "salaryUser03" },
-      amount: 150.00,
-      rewardTier: "Tier 1",
-      creditedOn: "2023-12-01T08:30:00Z",
-    },
-    {
-      id: 4,
-      userId: { username: "salaryUser04" },
-      amount: 350.00,
-      rewardTier: "Tier 3",
-      creditedOn: "2023-12-01T09:30:00Z",
-    },
-    {
-      id: 5,
-      userId: { username: "salaryUser05" },
-      amount: 250.00,
-      rewardTier: "Tier 2",
-      creditedOn: "2024-01-01T10:00:00Z",
-    },
-    {
-      id: 6,
-      userId: { username: "salaryUser01" },
-      amount: 150.00,
-      rewardTier: "Tier 1",
-      creditedOn: "2024-01-01T10:15:00Z",
-    },
-    {
-      id: 7,
-      userId: { username: "salaryUser03" },
-      amount: 150.00,
-      rewardTier: "Tier 1",
-      creditedOn: "2024-02-01T08:45:00Z",
-    },
-    {
-      id: 8,
-      userId: { username: "salaryUser06" },
-      amount: 450.00,
-      rewardTier: "Tier 4",
-      creditedOn: "2024-02-01T11:00:00Z",
-    },
-    {
-      id: 9,
-      userId: { username: "salaryUser04" },
-      amount: 350.00,
-      rewardTier: "Tier 3",
-      creditedOn: "2024-03-01T09:15:00Z",
-    },
-    {
-      id: 10,
-      userId: { username: "salaryUser05" },
-      amount: 250.00,
-      rewardTier: "Tier 2",
-      creditedOn: "2024-03-01T10:30:00Z",
-    },
-    {
-      id: 11,
-      userId: { username: "salaryUser07" },
-      amount: 550.00,
-      rewardTier: "Tier 5",
-      creditedOn: "2024-04-01T12:00:00Z",
-    },
-    {
-      id: 12,
-      userId: { username: "salaryUser02" },
-      amount: 250.00,
-      rewardTier: "Tier 2",
-      creditedOn: "2024-04-01T12:30:00Z",
-    },
-  ];
-
   const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+  });
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "transactionDate", direction: "descending" }); // Default sort by date
+
+  const fetchSalaryReports = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+      };
+
+      if (searchTerm) {
+        params.searchUser = searchTerm;
+      }
+      if (startDate) {
+        params.startDate = startDate;
+      }
+      if (endDate) {
+        params.endDate = endDate;
+      }
+
+      // Backend handles sorting by transactionDate implicitly with -1,
+      // For now, sorting logic for other fields remains primarily on frontend for flexibility.
+      // If you need backend sorting for 'name', 'email', 'amount', 'type', 'status', 'txnId',
+      // you would need to extend your backend controller to accept a 'sortBy' and 'sortDirection' parameter.
+
+      // Fix: Pass `params` directly to the API function
+      const response = await getAdminMonthlySalaryReport(params);
+
+      setData(response.data); // Backend returns data directly under 'data' property
+      setPagination(response.pagination); // Backend returns pagination directly under 'pagination' property
+    } catch (err) {
+      console.error("Error fetching admin monthly salary distribution report:", err);
+      // Ensure error handling gracefully extracts messages
+      setError(err.message || "Failed to fetch salary reports.");
+    } finally {
+      setLoading(false);
+    }
+  }, [pagination.page, pagination.limit, searchTerm, startDate, endDate]);
 
   useEffect(() => {
-    // Simulate API call delay with setTimeout
-    setTimeout(() => {
-      setData(dummyMonthlySalaryData);
-    }, 500);
-  }, []);
+    fetchSalaryReports();
+  }, [fetchSalaryReports]);
 
-  // Filtering logic
-  const filteredData = data.filter((row) => {
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      (row.userId?.username && row.userId.username.toLowerCase().includes(searchLower)) ||
-      (row.amount && row.amount.toString().includes(searchLower)) ||
-      (row.rewardTier && row.rewardTier.toLowerCase().includes(searchLower)) ||
-      (row.creditedOn && new Date(row.creditedOn).toLocaleDateString().toLowerCase().includes(searchLower))
-    );
-  });
-
-  // Sorting logic
-  const sortedData = [...filteredData].sort((a, b) => {
+  // Sorting logic (client-side for now, as backend only sorts by transactionDate by default)
+  const sortedData = [...data].sort((a, b) => {
     if (sortConfig.key) {
       const aValue = sortConfig.key.includes('.')
         ? sortConfig.key.split('.').reduce((o, i) => o?.[i], a)
@@ -123,14 +70,21 @@ const AdminMonthlySalaryReport = () => {
         ? sortConfig.key.split('.').reduce((o, i) => o?.[i], b)
         : b[sortConfig.key];
 
-      // Handle numerical sort for amount and rewardTier if they are numbers
+      // Handle numerical sort for amount
       let valA = aValue;
       let valB = bValue;
-      if (sortConfig.key === 'amount' || sortConfig.key === 'rewardTier') {
+
+      if (sortConfig.key === 'amount') {
         valA = Number(aValue);
         valB = Number(bValue);
+      } else if (sortConfig.key === 'userId.name' || sortConfig.key === 'userId.email') {
+        // For string comparisons on nested objects (name/email)
+        valA = String(aValue || '').toLowerCase();
+        valB = String(bValue || '').toLowerCase();
+      } else if (sortConfig.key === 'transactionDate') {
+        valA = new Date(aValue).getTime();
+        valB = new Date(bValue).getTime();
       }
-
 
       if (valA < valB) {
         return sortConfig.direction === 'ascending' ? -1 : 1;
@@ -142,19 +96,12 @@ const AdminMonthlySalaryReport = () => {
     return 0;
   });
 
-  // Pagination logic
-  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const currentData = sortedData.slice(startIndex, endIndex);
-
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    setPagination((prev) => ({ ...prev, page }));
   };
 
   const handleRowsPerPageChange = (e) => {
-    setRowsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page
+    setPagination((prev) => ({ ...prev, limit: Number(e.target.value), page: 1 })); // Reset to first page
   };
 
   const requestSort = (key) => {
@@ -186,16 +133,33 @@ const AdminMonthlySalaryReport = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search by user (name or email)..."
             className="w-full sm:w-1/3 p-2 rounded-md bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="p-2 rounded-md bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="Start Date"
+            />
+            <span className="text-gray-300">to</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="p-2 rounded-md bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="End Date"
+            />
+          </div>
           <div className="flex items-center gap-2">
             <label htmlFor="rowsPerPage" className="text-gray-300">Rows per page:</label>
             <select
               id="rowsPerPage"
-              value={rowsPerPage}
+              value={pagination.limit}
               onChange={handleRowsPerPageChange}
               className="p-2 rounded-md bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -208,83 +172,116 @@ const AdminMonthlySalaryReport = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-lg shadow-sm border border-white/10">
-          <table className="min-w-full leading-normal">
-            <thead className="bg-gray-700">
-              <tr>
-                <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('id')}>
-                  S.No {getSortIndicator('id')}
-                </th>
-                <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('userId.username')}>
-                  Username {getSortIndicator('userId.username')}
-                </th>
-                <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+        {loading ? (
+          <div className="text-center text-gray-400">Loading salary reports...</div>
+        ) : error ? (
+          <div className="text-center text-red-500">{error}</div>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-sm border border-white/10">
+            <table className="min-w-full leading-normal">
+              <thead className="bg-gray-700">
+                <tr>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('id')}> {/* S.No will be based on client-side index */}
+                    S.No
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('userId.name')}>
+                    Username {getSortIndicator('userId.name')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('userId.email')}>
+                    Email {getSortIndicator('userId.email')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
                     onClick={() => requestSort('amount')}>
-                  Amount {getSortIndicator('amount')}
-                </th>
-                <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('rewardTier')}>
-                  Reward Tier {getSortIndicator('rewardTier')}
-                </th>
-                <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
-                    onClick={() => requestSort('creditedOn')}>
-                  Credited On {getSortIndicator('creditedOn')}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-gray-800 text-gray-200">
-              {currentData.length > 0 ? (
-                currentData.map((row, index) => (
-                  <tr key={row.id} className="hover:bg-gray-700 transition-colors duration-200">
-                    <td className="px-5 py-3 border-b border-gray-700 text-sm">
-                      {startIndex + index + 1}
-                    </td>
-                    <td className="px-5 py-3 border-b border-gray-700 text-sm">
-                      {row.userId?.username || "N/A"}
-                    </td>
-                    <td className="px-5 py-3 border-b border-gray-700 text-sm">
-                      ${row.amount?.toFixed(2) || "0.00"}
-                    </td>
-                    <td className="px-5 py-3 border-b border-gray-700 text-sm">
-                      {row.rewardTier || "N/A"}
-                    </td>
-                    <td className="px-5 py-3 border-b border-gray-700 text-sm">
-                      {dateTimeTemplate(row.creditedOn)}
+                    Amount {getSortIndicator('amount')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('type')}>
+                    Type {getSortIndicator('type')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('status')}>
+                    Status {getSortIndicator('status')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('txnId')}>
+                    Transaction ID {getSortIndicator('txnId')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider cursor-pointer"
+                    onClick={() => requestSort('transactionDate')}>
+                    Transaction Date {getSortIndicator('transactionDate')}
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-600 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                    Admin Notes
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-gray-800 text-gray-200">
+                {sortedData.length > 0 ? (
+                  sortedData.map((row, index) => (
+                    <tr key={row._id} className="hover:bg-gray-700 transition-colors duration-200">
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {(pagination.page - 1) * pagination.limit + index + 1}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {row.userId?.name || "N/A"}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {row.userId?.email || "N/A"}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        ${row.amount?.toFixed(2) || "0.00"}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {row.type || "N/A"}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {row.status || "N/A"}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {row.txnId || "N/A"}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {dateTimeTemplate(row.transactionDate)}
+                      </td>
+                      <td className="px-5 py-3 border-b border-gray-700 text-sm">
+                        {row.adminActionNotes || "N/A"}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="px-5 py-5 text-center text-sm text-gray-400">
+                      No matching records found.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="px-5 py-5 text-center text-sm text-gray-400">
-                    No matching records found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Pagination Controls */}
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-300">
-            Showing {startIndex + 1} to {Math.min(endIndex, sortedData.length)} of {sortedData.length} entries
+            Showing {(pagination.page - 1) * pagination.limit + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} entries
           </span>
           <div className="flex gap-2">
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={pagination.page === 1}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             >
               Previous
             </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
                 className={`px-4 py-2 rounded-md ${
-                  currentPage === page
+                  pagination.page === page
                     ? "bg-blue-800 text-white"
                     : "bg-gray-700 text-gray-200 hover:bg-blue-600 hover:text-white"
                 } transition-colors duration-200`}
@@ -293,8 +290,8 @@ const AdminMonthlySalaryReport = () => {
               </button>
             ))}
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={pagination.page === pagination.totalPages}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             >
               Next

@@ -32,7 +32,7 @@ export const fetchUsers = async (params) => {
               Authorization: `Bearer ${token}`,
             },
           }); 
-          console.log("api calls",response) ;   
+          // console.log("api calls",response) ;   
             return response.data;
     } catch (error) {
         console.error("Error fetching users:", error);
