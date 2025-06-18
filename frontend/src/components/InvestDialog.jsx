@@ -62,7 +62,7 @@ export function InvestDialog() {
   const { user, loading: userSessionLoading } = useSession(); // Get user object from session
 
   const MIN_INVESTMENT_USD = 0.01;
-  const TARGET_WALLET_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; 
+  const TARGET_WALLET_ADDRESS = "0x801cBCBBE3E5D6eEBc254F2D73EEe5939488345a"; 
 
   useEffect(() => {
     // This effect runs only on the client side after initial render

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User, 
-  Menu, 
-  X, 
-  Home, 
-  Info, 
-  Phone, 
-  Settings, 
+import {
+  User,
+  Menu,
+  X,
+  Home,
+  Info,
+  Phone,
+  Settings,
   LogIn,
   ChevronRight,
   Search,
@@ -21,7 +21,7 @@ import { FaBlog, FaProductHunt } from 'react-icons/fa';
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Handle scroll effect
   useEffect(() => {
@@ -33,10 +33,10 @@ const navigate = useNavigate();
   }, []);
 
   // Mock navigation function
-//   const navigate = (path) => {
-//     console.log(`Navigating to: ${path}`);
-//     setOpen(false); // Close sidebar on navigation
-//   };
+  //   const navigate = (path) => {
+  //     console.log(`Navigating to: ${path}`);
+  //     setOpen(false); // Close sidebar on navigation
+  //   };
 
   // Sidebar menu items
   const menuItems = [
@@ -49,19 +49,18 @@ const navigate = useNavigate();
   return (
     <>
       {/* Navbar */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-     'bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-slate-700/50' 
-          
-      }`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${'bg-slate-900/35 backdrop-blur-md shadow-lg border-b border-slate-700/50'
+
+        }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
-            
+
             {/* Logo Section */}
-            <div 
-              onClick={() => navigate('/')} 
+            <div
+              onClick={() => navigate('/')}
               className="flex items-center cursor-pointer group"
             >
-             <img src={appLogo} width={200} alt="" />
+              <img src={appLogo} width={120} alt="" />
             </div>
 
             {/* Desktop Navigation */}
@@ -79,7 +78,7 @@ const navigate = useNavigate();
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-3 lg:space-x-4">
-              
+
               {/* Search Button - Hidden on mobile */}
               {/* <button className="hidden md:flex items-center justify-center w-10 h-10 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200">
                 <Search className="w-5 h-5" />
@@ -92,7 +91,7 @@ const navigate = useNavigate();
               </button> */}
 
               {/* Login Button */}
-              <button 
+              <button
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-2 px-4 py-2 lg:px-6 lg:py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-blue-500/25 transform hover:scale-105"
               >
@@ -101,7 +100,7 @@ const navigate = useNavigate();
               </button>
 
               {/* Menu Button */}
-              <button 
+              <button
                 onClick={() => setOpen(!open)}
                 className="flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl lg:hidden"
               >
@@ -109,7 +108,7 @@ const navigate = useNavigate();
               </button>
 
               {/* Desktop Menu Button */}
-              <button 
+              <button
                 onClick={() => setOpen(!open)}
                 className="hidden lg:flex items-center justify-center w-12 h-12 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
               >
@@ -118,25 +117,24 @@ const navigate = useNavigate();
             </div>
           </div>
         </div>
-      </nav>
+      </nav >
 
       {/* Sidebar Overlay */}
-      <div 
-        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      < div
+        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`
+        }
         onClick={() => setOpen(false)}
       />
 
       {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-80 max-w-sm bg-slate-900 border-l border-slate-700/50 z-50 transform transition-transform duration-300 ease-in-out ${
-        open ? 'translate-x-0' : 'translate-x-full'
-      }`}>
-        
+      <div className={`fixed top-0 right-0 h-full w-80 max-w-sm bg-slate-900 border-l border-slate-700/50 z-50 transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'
+        }`}>
+
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700/50">
           <h2 className="text-xl font-bold text-white">Menu</h2>
-          <button 
+          <button
             onClick={() => setOpen(false)}
             className="p-2 hover:bg-slate-800 rounded-lg transition-colors duration-200"
           >
@@ -162,7 +160,7 @@ const navigate = useNavigate();
           <div className="px-6 mb-4">
             <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Navigation</h3>
           </div>
-          
+
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -187,9 +185,9 @@ const navigate = useNavigate();
         {/* Quick Actions */}
         <div className="px-6 py-4 border-t border-slate-700/50 mt-auto">
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Quick Actions</h3>
-          
+
           <div className="space-y-3">
-            <button 
+            <button
               onClick={() => {
                 navigate('/login');
                 setOpen(false);
@@ -199,16 +197,16 @@ const navigate = useNavigate();
               <LogIn className="w-4 h-4" />
               Sign In
             </button>
-            
-            <button
-               onClick={() => {
-                 navigate(AuthRoutes.REGISTER);
-                 setOpen(false);
-               }}
-            className=" px-4 py-3 w-full flex items-center justify-center gap-2 border border-slate-600 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg font-semibold transition-all duration-200">
-            <LogIn className="w-4 h-4" />
 
-            Sign Up
+            <button
+              onClick={() => {
+                navigate('/register');
+                setOpen(false);
+              }}
+              className=" px-4 py-3 w-full flex items-center justify-center gap-2 border border-slate-600 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg font-semibold transition-all duration-200">
+              <LogIn className="w-4 h-4" />
+
+              Sign Up
             </button>
           </div>
         </div>

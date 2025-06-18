@@ -103,7 +103,7 @@ export default function SidebarMenuContent() {
                           onClick={handleMenuClick}
                           className="flex items-center space-x-2"
                         >
-                          <sub.icon className="text-base" />
+                          <sub.icon className="text-base text-green-200" />
                           <span>{sub.label}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -128,7 +128,7 @@ export default function SidebarMenuContent() {
                     onClick={handleMenuClick}
                     className="flex items-center space-x-3"
                   >
-                    <item.icon className="text-lg" />
+                    <item.icon className="text-lg text-yellow-400" />
                     <span>{item.label}</span>
                   </Link>
                 </SidebarMenuButton>

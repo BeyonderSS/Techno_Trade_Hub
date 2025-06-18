@@ -32,7 +32,7 @@ export const sidebarConfig = {
     {
       label: "Withdraw",
       icon: ArrowDownCircle,
-      href: "/dashbaord/withdraw", // Updated path for consistency
+      href: "/dashboard/withdraw", // Updated path for consistency
 
     },
     {
@@ -83,7 +83,7 @@ export const sidebarConfig = {
     {
       label: "Withdraw",
       icon: ArrowDownCircle,
-      href: "/dashbaord/withdraw", // Updated path for consistency
+      href: "/dashboard/withdraw", // Updated path for consistency
 
     },
     {

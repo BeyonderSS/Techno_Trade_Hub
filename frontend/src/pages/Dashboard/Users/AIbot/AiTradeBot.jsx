@@ -212,8 +212,8 @@ export default function Home() {
 
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-lg sm:text-xl font-bold">
-                Trading Dashboard
+              <h2 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-green-500">
+                Trading chart
               </h2>
               <div className="flex items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-1 sm:gap-2">
