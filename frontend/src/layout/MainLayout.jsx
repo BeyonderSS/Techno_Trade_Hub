@@ -28,7 +28,7 @@ export default function MainLayout({ children }) {
 
         <div className="w-full text-white bg-white">
           <OurTopIntegration />
-          <CryptoMiningMarketplace />
+          {/* <CryptoMiningMarketplace /> */}
           <div className="p-5">
             {/* <ProductSection/> */}
           </div>

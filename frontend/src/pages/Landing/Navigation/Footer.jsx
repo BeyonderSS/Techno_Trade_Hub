@@ -67,7 +67,7 @@ export const Footer = () => {
             <ul className="space-y-2">
               {[
                 { to: "/faq/bitcoin", label: "What is Bitcoin?" },
-                { to: "/faq/mining", label: "What is Mining?" },
+                // { to: "/faq/mining", label: "What is Mining?" },
                 { to: "/faq/how-it-works", label: "How it works?" },
                 { to: "/about", label: "Who we are" },
                 { to: "/faq/anonymous-miner", label: "How Anonymous Miner Works" },

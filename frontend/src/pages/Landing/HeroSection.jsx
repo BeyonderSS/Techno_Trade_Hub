@@ -34,11 +34,11 @@ const HeroSection = () => {
           />
 
           {/* Middle Image (Crystal 2) */}
-          <img
+          {/* <img
             src={cryst2}
             alt="Crystal 2"
             className="w-[18rem] sm:w-[25rem] md:w-[35rem] lg:w-[50rem] mt-2 sm:mt-4 transition-transform duration-500 hover:scale-105"
-          />
+          /> */}
 
           {/* Text and Crystal 3 Row */}
           <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-6xl mt-6 sm:mt-10 gap-6">
@@ -46,7 +46,8 @@ const HeroSection = () => {
             {/* Text content */}
             <div className="md:w-11/12 text-center md:text-left px-2 sm:px-4 text-base sm:text-lg md:text-xl lg:text-2xl">
               <p className="leading-relaxed tracking-wide">
-                <strong>NEBULUX</strong> is the native cryptocurrency of the <strong>TECHNO TRADE HUB</strong> ecosystem—designed to power a new era of decentralized finance. Built on a secure and scalable blockchain infrastructure, NEBULUX integrates seamlessly with our platform's features, offering users real utility, speed, and low transaction costs.
+                {/* <strong>NEBULUX</strong> */}
+                 is the native cryptocurrency of the <strong>TECHNO TRADE HUB</strong> ecosystem—designed to power a new era of decentralized finance. Built on a secure and scalable blockchain infrastructure, NEBULUX integrates seamlessly with our platform's features, offering users real utility, speed, and low transaction costs.
               </p>
             </div>
 
