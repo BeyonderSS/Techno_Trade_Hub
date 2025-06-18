@@ -17,7 +17,7 @@ const levelIncomePercentages = [
 ];
 
 export const startRoiDistributionJob = () => {
-  cron.schedule('0 0 * * *', async () => { // Daily at 12 AM
+  cron.schedule('0 0 1 * *', async () => { // Daily at 12 AM
     console.log('Running Dynamic Compounding ROI & Level Income distribution job...');
     try {
       // Fetch only users with role 'user' to check their wallet balances and associated investments
@@ -32,20 +32,20 @@ export const startRoiDistributionJob = () => {
 
         let activeInvestment = await Investment.findOne({ userId, status: 'active' });
 
-        if (currentWalletBalance >= 30) {
+        if (currentWalletBalance >= 0) {
           let investmentAmountForRoi = currentWalletBalance;
 
           let roiPercentageMin, roiPercentageMax;
-          if (investmentAmountForRoi >= 30 && investmentAmountForRoi < 5000) {
+          if (investmentAmountForRoi >= 1 && investmentAmountForRoi < 5) {
             roiPercentageMin = 1;
             roiPercentageMax = 3;
-          } else if (investmentAmountForRoi >= 5000 && investmentAmountForRoi < 10000) {
+          } else if (investmentAmountForRoi >= 6 && investmentAmountForRoi < 8) {
             roiPercentageMin = 3;
             roiPercentageMax = 5;
-          } else if (investmentAmountForRoi >= 10000 && investmentAmountForRoi < 15000) {
+          } else if (investmentAmountForRoi >= 9 && investmentAmountForRoi < 10) {
             roiPercentageMin = 5;
             roiPercentageMax = 7;
-          } else if (investmentAmountForRoi >= 15000) {
+          } else if (investmentAmountForRoi >= 10) {
             roiPercentageMin = 7;
             roiPercentageMax = 10;
           } else {
@@ -68,6 +68,7 @@ export const startRoiDistributionJob = () => {
                 txnId: generateTxnId('roi_payout'),
                 amount: roiAmount,
                 type: 'roi_payout',
+                status: 'completed',
                 description: `Daily ROI on wallet balance of $${currentWalletBalance.toFixed(2)}`
               }
             }

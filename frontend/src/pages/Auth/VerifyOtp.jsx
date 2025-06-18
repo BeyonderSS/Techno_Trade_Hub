@@ -89,8 +89,8 @@ export default function VerifyOtp() {
 
     try {
       // Call your actual resendOtp API function
-      const result = await toast.promise(
-        resendOtpApi({ email }), // Pass email as a payload object
+      const result =  toast.promise(
+        await resendOtpApi({ email }), // Pass email as a payload object
         {
           loading: "Resending OTP...",
           success: (data) => {
@@ -144,8 +144,8 @@ export default function VerifyOtp() {
 
     try {
       // Call your actual verifyOtp API function
-      const result = await toast.promise(
-        verifyOtpApi({ email, otp }), // Pass email and otp as a payload object
+      const result =  toast.promise(
+        await verifyOtpApi({ email, otp }), // Pass email and otp as a payload object
         {
           loading: "Verifying OTP...",
           success: (data) => {

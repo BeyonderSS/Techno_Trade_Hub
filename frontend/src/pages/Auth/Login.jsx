@@ -12,6 +12,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
+  CardFooter,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -54,8 +55,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-       await toast.promise(
-        loginUserApi({ email, password }), // Call your actual API function here
+       toast.promise(
+       await loginUserApi({ email, password }), // Call your actual API function here
         {
           loading: "Logging in...",
           success: (data) => {
@@ -162,6 +163,14 @@ export default function Login() {
                 {loading ? "Logging in..." : "Login"}
               </Button>
             </form>
+            <CardFooter className="flex flex-col space-y-2 text-sm text-muted-foreground">
+              <div className="text-center">
+                Don't have an account?{" "}
+                <a href="/register" className="text-green-600 hover:underline">
+                  Signup here
+                </a>
+              </div>
+            </CardFooter>
           </CardContent>
         </Card>
       </div>

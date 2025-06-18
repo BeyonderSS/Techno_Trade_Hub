@@ -42,6 +42,7 @@ export default function SalaryIncomePage() {
         }
 
         const response = await getSalaryIncomeReportApi(user.id, filters);
+        console.log(response,"salary income frontend");
         setData(response.data); // Update data state with fetched data
       } catch (err) {
         console.error("Error fetching salary income report:", err);
@@ -157,11 +158,11 @@ export default function SalaryIncomePage() {
       value: `$${totalSalaryIncome.toFixed(2)}`,
       icon: <DollarSign className="h-5 w-5" />,
     },
-    {
-      label: "Last Payment",
-      value: lastPaymentDate,
-      icon: <Calendar className="h-5 w-5" />,
-    },
+    // {
+    //   label: "Last Payment",
+    //   value: lastPaymentDate,
+    //   icon: <Calendar className="h-5 w-5" />,
+    // },
   ];
 
   // Function to handle exporting data to CSV

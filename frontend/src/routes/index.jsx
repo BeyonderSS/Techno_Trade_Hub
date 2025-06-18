@@ -35,25 +35,21 @@ const routes = [
   {
     path: "/login",
     element: (
-      <MainLayout>
-        <Login />
-      </MainLayout>
+      <Login />
     ),
   },
   {
     path: "/register", // Route for the signup page
     element: (
-      <MainLayout>
-        <Register />
-      </MainLayout>
+      <Register />
     ),
   },
   {
     path: "/verify-otp",
     element: (
-      <MainLayout>
+      
         <VerifyOtp />
-      </MainLayout>
+      
     ),
   },
 
@@ -179,7 +175,7 @@ const routes = [
     ),
   },
   {
-    path: "/dashbaord/withdraw",
+    path: "/dashboard/withdraw",
     element: (
       <DashboardLayout>
         <WithdrawalsPage />

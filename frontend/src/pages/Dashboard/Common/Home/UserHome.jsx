@@ -86,6 +86,7 @@ const UserHome = () => {
       try {
         setLoading(true);
         const data = await getUserHomeApi();
+// console.log(data.data,"frontend home")
         setUserData(data.data);
       } catch (err) {
         console.error("Failed to fetch user home data:", err);
@@ -99,7 +100,9 @@ const UserHome = () => {
   }, []);
 
   const location = frontEndUrl;
-  const referCode = `${location}/register?referralCode=${userData?.referralCode}`;
+  const referCode = userData?.referralCode;
+  // console.log(userData,"user data")
+  // console.log(referCode,"user referral")
 
   const formatDate = (dateString) => {
     if (!dateString) return "NA";
