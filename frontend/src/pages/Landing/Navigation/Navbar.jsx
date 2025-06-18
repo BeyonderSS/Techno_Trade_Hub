@@ -61,7 +61,7 @@ const navigate = useNavigate();
               onClick={() => navigate('/')} 
               className="flex items-center cursor-pointer group"
             >
-             <img src={appLogo} width={200} alt="" />
+             <img src={appLogo} className='w-[8rem]' alt="" />
             </div>
 
             {/* Desktop Navigation */}

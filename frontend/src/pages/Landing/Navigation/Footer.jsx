@@ -14,8 +14,8 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-12 relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
          
-          <div className="space-y-4">
-            <img src={logo} alt="Logo" className="w-40 h-auto brightness-110" />
+          <div className="space-y-2">
+            <img src={logo} alt="Logo" className="w-[8rem]  brightness-110" />
             <p className="text-gray-400 text-sm leading-relaxed">
               Empowering the future of cryptocurrency mining with innovative solutions.
             </p>
